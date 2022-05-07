@@ -11,23 +11,64 @@ import lombok.Setter;
 
 public class User implements Player {
 
+	// Fields
 	private String id;
 	private String pwd;
 	private int money;
 
-	@Override
-	public Card hit() {
-		// TODO Auto-generated method stub
-		return null;
+	// Methods
+	// Bet
+	private int bet(int money) {
+		System.out.println("Your Bet: " + money);
+		return money;
 	}
 
-	public List<Card> getBlackJackCard(List<Card> playerCard) {
-		System.out.println("플레이어의 현재 카드");
-		for (Card card : playerCard) {
+	// Betting result
+	// If wins, User earns twice the initial bet
+	// If loses, User loses the amount of initial bet
+	public int betResult(int money, boolean result) {
+		int returnBet = bet(money);
+		if (result) {
+			returnBet *= 2;
+		} else if (result == false) {
+			returnBet *= -1;
+		}
+		System.out.println("Bet result: " + money);
+		return returnBet;
+	}
+
+	// Get cards
+	@Override
+	public List<Card> getCard(List<Card> cards) {
+		List<Card> userCards = cards;
+		return userCards;
+	}
+
+	// Draw one card from stack
+	@Override
+	public List<Card> drawCard(List<Card> cards, Card card) {
+		cards.add(card);
+		return cards;
+	}
+
+	// Show cards (One Card)
+	@Override
+	public void showOneCard(List<Card> cards) {
+		System.out.println("User Cards");
+		for (Card card : cards) {
 			System.out.print(card.toString() + " ");
 		}
 		System.out.println();
-		return playerCard;
+	}
+
+	// Show cards (BlackJack)
+	@Override
+	public void showBlackJackCard(List<Card> cards) {
+		System.out.println("User Cards");
+		for (Card card : cards) {
+			System.out.println(card.toString() + " ");
+		}
+		System.out.println();
 	}
 
 }

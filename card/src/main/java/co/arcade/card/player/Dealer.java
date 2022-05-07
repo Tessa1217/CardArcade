@@ -6,26 +6,44 @@ import co.arcade.card.carddeck.Card;
 
 public class Dealer implements Player {
 
+	// Methods
+
+	// Get first dealer cards
 	@Override
-	public Card hit() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Card> getCard(List<Card> cards) {
+		List<Card> dealerCards = cards;
+		if (cards.size() == 7) {
+			showOneCard(cards);
+		} else if (cards.size() == 2) {
+			showBlackJackCard(cards);
+		}
+		return dealerCards;
 	}
 
-	public List<Card> getBlackJackCard(List<Card> dealerCard) {
-		System.out.println("딜러의 현재 카드");
-		System.out.print("*[*] ");
-		for (int i = 1; i < dealerCard.size(); i++) {
-			System.out.print(dealerCard.get(i).toString());
+	// Draw one card from the deck
+	@Override
+	public List<Card> drawCard(List<Card> cards, Card card) {
+		cards.add(card);
+		return cards;
+	}
+
+	// Show current cards (One Card)
+	@Override
+	public void showOneCard(List<Card> cards) {
+		for (int i = 0; i < cards.size(); i++) {
+			System.out.print("*[*]" + " ");
 		}
 		System.out.println();
-		return dealerCard;
 	}
 
-	public void openDealerCard(List<Card> dealerCard) {
-		for (Card card : dealerCard) {
-			System.out.println(card.toString());
+	// Show current cards (BlackJack)
+	@Override
+	public void showBlackJackCard(List<Card> cards) {
+		for (int i = 0; i < cards.size(); i++) {
+			if (i == cards.size() - 1) {
+				System.out.print("*[*]" + " ");
+			}
+			System.out.print(cards.get(i) + " ");
 		}
 	}
-
 }
