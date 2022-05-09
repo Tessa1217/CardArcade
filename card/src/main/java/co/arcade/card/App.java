@@ -6,6 +6,8 @@ package co.arcade.card;
  */
 public class App {
 	public static void main(String[] args) {
+//		GameView gv = new GameView();
+//		gv.execute();
 
 	}
 }
