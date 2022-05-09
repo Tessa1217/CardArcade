@@ -12,14 +12,6 @@ public class BlackJack implements GameRules {
 	// 한 회차동안 사용할 카드 덱
 	public static Stack<Card> cardStack = CardDeck.shuffleDeck();
 
-	// 베팅 금액 받기
-	@Override
-	public int bet(int money) {
-		System.out.print("베팅 금액 : ");
-		return money;
-
-	}
-
 	// 첫번째 카드 배분
 	@Override
 	public List<Card> firstHand() {
@@ -30,26 +22,34 @@ public class BlackJack implements GameRules {
 			Card card = cardStack.pop();
 			playerCard.add(card);
 		}
-		int sum = sumCard(playerCard);
-		System.out.print("현재 점수: ");
-		System.out.println(sum);
-		System.out.println(result(sum));
-
 		return playerCard;
 	}
 
 	// 카드 추가
 	@Override
-	public List<Card> draw(List<Card> playerCard) {
+	public Card draw() {
+		Card card = null;
 		if (cardStack.isEmpty() == false) {
-			playerCard.add(cardStack.pop());
+			card = cardStack.pop();
 		}
-		int sum = sumCard(playerCard);
-		System.out.print("현재 점수: ");
-		System.out.println(sum);
-		System.out.println(result(sum));
-		return playerCard;
+		return card;
+	}
 
+	public double blackJack(List<Card> playerCards, List<Card> dealerCards) {
+		double bj = 0;
+		int playerSum = sumCard(playerCards);
+		int dealerSum = sumCard(playerCards);
+		if (playerSum == 21) {
+			System.out.println("User BlackJack!");
+			bj = 1.5;
+		} else if (dealerSum == 21) {
+			System.out.println("Dealer BlackJack!");
+			bj = -2.0;
+		} else if (playerSum == 21 && dealerSum == 21) {
+			System.out.println("User, Dealer BlackJack. Push.");
+			return bj;
+		}
+		return bj;
 	}
 
 	// 카드의 합
@@ -76,20 +76,79 @@ public class BlackJack implements GameRules {
 		return score;
 	}
 
-	public String result(int sum) {
-		String result = "";
-		if (sum > 21) {
-			result += "Bust";
+	// 카드의 합을 이용하여 결과 산출
+	public int result(int playerSum, int dealerSum) {
+		int result = 0;
+		if (playerSum == 21) {
+			if (dealerSum == 21) {
+				System.out.println("User, Dealer PUSH");
+				return 2;
+			} else if (dealerSum < 21) {
+				System.out.println("User Wins");
+				return 1;
+			} else if (dealerSum > 21) {
+				System.out.println("Dealer Busted, User Wins");
+				return 1;
+			}
+		} else if (playerSum > 21) {
+			if (dealerSum == 21) {
+				System.out.println("User Busted, Dealer Wins");
+				return 3;
+			} else if (dealerSum < 21) {
+				System.out.println("User Busted, Dealer Wins");
+				return 3;
+			} else if (dealerSum > 21) {
+				System.out.println("User, Dealer Busted, Dealer Wins");
+				return 3;
+			}
+
+		} else if (playerSum < 21) {
+			if (dealerSum == 21) {
+				System.out.println("Dealer Wins");
+				return 3;
+			} else if (dealerSum < 21) {
+				if (playerSum > dealerSum) {
+					System.out.println("Player Wins");
+					return 1;
+				} else if (playerSum < dealerSum) {
+					System.out.println("Dealer Wins");
+					return 3;
+				} else if (playerSum == dealerSum) {
+					System.out.println("Player, Dealer PUSH");
+					return 2;
+				}
+			} else if (dealerSum > 21) {
+				System.out.println("Dealer Busted, User Wins");
+				return 1;
+			}
 		}
 		return result;
 	}
 
-	// 최종 금액 계산
+	public int bust(int userSum, int dealerSum) {
+		int result = 0;
+
+		if (userSum > 21) {
+			System.out.println("** User Busted **");
+			result = 3;
+		} else if (dealerSum > 21) {
+			System.out.println("** Dealer Busted **");
+			result = 1;
+		} else if (userSum > 21 && dealerSum > 21) {
+			System.out.println("** User, Dealer Busted, User Loses! **");
+			result = 2;
+		}
+		return result;
+	}
+
+	// 베팅 금액 계산
 	@Override
-	public int winning(int bet, boolean result) {
-		if (result) {
+	public int winning(int result, int bet) {
+		if (result == 1) {
 			bet *= 2;
-		} else if (result) {
+		} else if (result == 2) {
+			return bet;
+		} else if (result == 3) {
 			bet *= -1;
 		}
 		return bet;

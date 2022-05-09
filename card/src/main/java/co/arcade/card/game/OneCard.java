@@ -41,22 +41,15 @@ public class OneCard implements GameRules {
 		return cardStack;
 	}
 
-	// 돈 배팅
-	@Override
-	public int bet(int money) {
-		System.out.println("배팅 금액 : " + money);
-		return money;
-	}
-
 	// 카드 한 장 가져가기
-	@Override
-	public List<Card> draw(List<Card> playerCard) {
-		if (cardStack.size() - 1 == 0) {
-			cardStack = reshuffle(discardStack);
-		}
-		playerCard.add(cardStack.pop());
-		return playerCard;
-	}
+//	@Override
+//	public List<Card> draw(List<Card> playerCard) {
+//		if (cardStack.size() - 1 == 0) {
+//			cardStack = reshuffle(discardStack);
+//		}
+//		playerCard.add(cardStack.pop());
+//		return playerCard;
+//	}
 
 	// 카드 내려놓기
 
@@ -97,13 +90,19 @@ public class OneCard implements GameRules {
 
 	// 게임 후 베팅 금액 계산
 	@Override
-	public int winning(int bet, boolean result) {
-		if (result) {
-			bet *= 2;
-		} else if (result == false) {
-			bet *= -1;
-		}
+	public int winning(int result, int bet) {
+//		if (result) {
+//			bet *= 2;
+//		} else if (result == false) {
+//			bet *= -1;
+//		}
 		return 0;
+	}
+
+	@Override
+	public Card draw() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

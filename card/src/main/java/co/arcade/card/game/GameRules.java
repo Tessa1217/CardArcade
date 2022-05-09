@@ -6,12 +6,10 @@ import co.arcade.card.carddeck.Card;
 
 public interface GameRules {
 
-	int bet(int money);
-
 	List<Card> firstHand();
 
-	List<Card> draw(List<Card> playerCard);
+	Card draw();
 
-	int winning(int bet, boolean result);
+	int winning(int result, int bet);
 
 }
