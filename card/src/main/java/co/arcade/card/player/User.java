@@ -18,7 +18,11 @@ public class User implements Player {
 
 	// Methods
 	// Bet
-	private int bet(int money) {
+	public int bet(int money) {
+		if (money > this.money) {
+			System.out.println("잔액이 부족합니다.");
+			return 0;
+		}
 		System.out.println("Your Bet: " + money);
 		return money;
 	}
@@ -54,7 +58,6 @@ public class User implements Player {
 	// Show cards (One Card)
 	@Override
 	public void showOneCard(List<Card> cards) {
-		System.out.println("User Cards");
 		for (Card card : cards) {
 			System.out.print(card.toString() + " ");
 		}
@@ -64,9 +67,8 @@ public class User implements Player {
 	// Show cards (BlackJack)
 	@Override
 	public void showBlackJackCard(List<Card> cards) {
-		System.out.println("User Cards");
-		for (Card card : cards) {
-			System.out.println(card.toString() + " ");
+		for (int i = 0; i < cards.size(); i++) {
+			System.out.print(cards.get(i).toString() + " ");
 		}
 		System.out.println();
 	}

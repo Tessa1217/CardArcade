@@ -9,10 +9,10 @@ import co.arcade.card.dao.DataSource;
 
 public class UserService {
 
-	DataSource ds = DataSource.getInstance();
-	Connection conn;
-	PreparedStatement psmt;
-	ResultSet rs;
+	private static DataSource ds = DataSource.getInstance();
+	private static Connection conn;
+	private static PreparedStatement psmt;
+	private static ResultSet rs;
 
 	// 계정 생성
 	public int signUp(User user) {
@@ -83,8 +83,12 @@ public class UserService {
 	private void closeConnection() {
 		try {
 			if (rs != null) {
+				rs.close();
 			}
-			rs.close();
+
+			if (psmt != null) {
+				psmt.close();
+			}
 
 			if (conn != null) {
 				conn.close();

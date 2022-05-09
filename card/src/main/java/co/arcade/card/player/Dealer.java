@@ -3,8 +3,15 @@ package co.arcade.card.player;
 import java.util.List;
 
 import co.arcade.card.carddeck.Card;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Dealer implements Player {
+
+	// Fields
+	private List<Card> dealerCards;
 
 	// Methods
 
@@ -42,8 +49,10 @@ public class Dealer implements Player {
 		for (int i = 0; i < cards.size(); i++) {
 			if (i == cards.size() - 1) {
 				System.out.print("*[*]" + " ");
+				break;
 			}
 			System.out.print(cards.get(i) + " ");
 		}
+		System.out.println();
 	}
 }
