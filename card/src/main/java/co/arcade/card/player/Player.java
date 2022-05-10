@@ -14,10 +14,6 @@ public interface Player {
 
 	// Display current cards (One Card)
 	// Dealer should not open cards
-	void showOneCard(List<Card> cards);
-
-	// Display current cards (BlackJack)
-	// Dealer should only open the last card
-	void showBlackJackCard(List<Card> cards);
+	void showCard(List<Card> cards);
 
 }

@@ -19,11 +19,6 @@ public class Dealer implements Player {
 	@Override
 	public List<Card> getCard(List<Card> cards) {
 		List<Card> dealerCards = cards;
-		if (cards.size() == 7) {
-			showOneCard(cards);
-		} else if (cards.size() == 2) {
-			showBlackJackCard(cards);
-		}
 		return dealerCards;
 	}
 
@@ -34,25 +29,18 @@ public class Dealer implements Player {
 		return cards;
 	}
 
-	// Show current cards (One Card)
+	// Show Cards
 	@Override
-	public void showOneCard(List<Card> cards) {
+	public void showCard(List<Card> cards) {
+		System.out.println("Dealer Card");
 		for (int i = 0; i < cards.size(); i++) {
-			System.out.print("*[*]" + " ");
+			if (i == cards.size() - 1) {
+				System.out.print("*[*] ");
+				break;
+			}
+			System.out.print(cards.get(i).toString() + " ");
 		}
 		System.out.println();
 	}
 
-	// Show current cards (BlackJack)
-	@Override
-	public void showBlackJackCard(List<Card> cards) {
-		for (int i = 0; i < cards.size(); i++) {
-			if (i == cards.size() - 1) {
-				System.out.print("*[*]" + " ");
-				break;
-			}
-			System.out.print(cards.get(i) + " ");
-		}
-		System.out.println();
-	}
 }

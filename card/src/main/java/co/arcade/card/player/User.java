@@ -27,21 +27,7 @@ public class User implements Player {
 		return money;
 	}
 
-	// Betting result
-	// If wins, User earns twice the initial bet
-	// If loses, User loses the amount of initial bet
-	public int betResult(int money, boolean result) {
-		int returnBet = bet(money);
-		if (result) {
-			returnBet *= 2;
-		} else if (result == false) {
-			returnBet *= -1;
-		}
-		System.out.println("Bet result: " + money);
-		return returnBet;
-	}
-
-	// Get cards
+	// Get cards (BlackJack, OneCard)
 	@Override
 	public List<Card> getCard(List<Card> cards) {
 		List<Card> userCards = cards;
@@ -55,20 +41,11 @@ public class User implements Player {
 		return cards;
 	}
 
-	// Show cards (One Card)
+	// Show cards
 	@Override
-	public void showOneCard(List<Card> cards) {
+	public void showCard(List<Card> cards) {
 		for (Card card : cards) {
 			System.out.print(card.toString() + " ");
-		}
-		System.out.println();
-	}
-
-	// Show cards (BlackJack)
-	@Override
-	public void showBlackJackCard(List<Card> cards) {
-		for (int i = 0; i < cards.size(); i++) {
-			System.out.print(cards.get(i).toString() + " ");
 		}
 		System.out.println();
 	}
