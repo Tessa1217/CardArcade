@@ -25,8 +25,8 @@ public class BlackJackGame {
 		user = currentUser;
 		int betMoney = 0;
 		while (true) {
-			System.out.println("메뉴를 선택해주세요 >> ");
 			System.out.println("1.Play Game | 2.Exit");
+			System.out.println("메뉴를 선택해주세요 >> ");
 			int menu = -1;
 			try {
 				menu = Integer.parseInt(scn.next());
@@ -110,18 +110,18 @@ public class BlackJackGame {
 
 	// 플레이어 카드 출력 메소드
 	private void displayUserCards(List<Card> userCards) {
-		user.showBlackJackCard(userCards);
+		user.showCard(userCards);
 		System.out.println("유저 합계: " + bj.sumCard(userCards));
 	}
 
 	// 딜러 카드 출력 메소드 (마지막 1장은 보이지 않게 유지)
 	private void displayDealerCards(List<Card> dealerCards) {
-		dealer.showBlackJackCard(dealerCards);
+		dealer.showCard(dealerCards);
 	}
 
 	// 딜러 카드 오픈 메소드
 	private void openDealerCards(List<Card> dealerCards) {
-		user.showBlackJackCard(dealerCards);
+		user.showCard(dealerCards);
 		System.out.println(bj.sumCard(dealerCards));
 	}
 

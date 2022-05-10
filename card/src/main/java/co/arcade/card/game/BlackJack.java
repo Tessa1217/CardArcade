@@ -22,6 +22,7 @@ public class BlackJack implements GameRules {
 			Card card = cardStack.pop();
 			playerCard.add(card);
 		}
+
 		return playerCard;
 	}
 
@@ -35,6 +36,7 @@ public class BlackJack implements GameRules {
 		return card;
 	}
 
+	// 블랙잭 여부
 	public double blackJack(List<Card> playerCards, List<Card> dealerCards) {
 		double bj = 0;
 		int playerSum = sumCard(playerCards);
