@@ -32,4 +32,14 @@ public class CardDeck {
 		return cardStack;
 	}
 
+	public static Stack<Card> shuffleDeck(Stack<Card> cardDeck) {
+		Collections.shuffle(cardDeck);
+		Stack<Card> cardStack = new Stack<Card>();
+		for (int i = 0; i < cardDeck.size(); i++) {
+			cardStack.push(cardDeck.get(i));
+		}
+		return cardStack;
+
+	}
+
 }
