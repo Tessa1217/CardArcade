@@ -4,6 +4,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import co.arcade.card.game.BlackJackGame;
+import co.arcade.card.game.OneCardGame;
 import co.arcade.card.player.User;
 import co.arcade.card.player.UserServiceImpl;
 
@@ -13,6 +14,7 @@ public class GameView {
 	private static User user;
 	private static UserServiceImpl usi = new UserServiceImpl();
 	private static BlackJackGame bjs = new BlackJackGame();
+	private static OneCardGame ocg = new OneCardGame();
 
 	public void execute() {
 		while (true) {
@@ -23,6 +25,7 @@ public class GameView {
 				}
 			}
 		}
+
 	}
 
 	private void mainTitle(User currentUser) {
@@ -44,6 +47,7 @@ public class GameView {
 				user.setMoney(user.getMoney() + betMoney);
 			}
 		} else if (menu == 2) {
+			int betMoney = ocg.execute(user);
 
 		} else if (menu == 3) {
 
