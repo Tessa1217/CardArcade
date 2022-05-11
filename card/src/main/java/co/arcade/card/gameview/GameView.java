@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 import co.arcade.card.game.BlackJackGame;
 import co.arcade.card.game.OneCardGame;
+import co.arcade.card.manual.Manual;
+import co.arcade.card.manual.TranslateService;
 import co.arcade.card.player.User;
 import co.arcade.card.player.UserServiceImpl;
 
@@ -21,19 +23,27 @@ public class GameView {
 			user = usi.accountExecute();
 			if (user != null) {
 				while (true) {
-					mainTitle(user);
+					boolean run = mainTitle(user);
+					if (run == false) {
+						user = new User();
+						break;
+					}
 				}
+			}
+			if (user == null) {
+				break;
 			}
 		}
 
 	}
 
-	private void mainTitle(User currentUser) {
+	private boolean mainTitle(User currentUser) {
+		boolean run = true;
 		user = currentUser;
-		System.out.println(currentUser.getId() + "님의 잔고: " + currentUser.getMoney() + "원");
-		System.out.println("====================================");
-		System.out.println("1.블랙잭 | 2.원카드 | 3.계정수정 | 4.로그아웃");
-		System.out.println("====================================");
+		System.out.println(currentUser.getId() + "님의 현재 잔고: " + currentUser.getMoney() + "원");
+		System.out.println("=============================================");
+		System.out.println("1.블랙잭 | 2.원카드 | 3.계정수정 | 4.로그아웃 | 5.설명서");
+		System.out.println("=============================================");
 		System.out.println("메뉴를 선택하세요 >>> ");
 		int menu = -1;
 		try {
@@ -48,12 +58,49 @@ public class GameView {
 			}
 		} else if (menu == 2) {
 			int betMoney = ocg.execute(user);
-
+			if (betMoney != 0) {
+				user.setMoney(user.getMoney() + betMoney);
+			}
 		} else if (menu == 3) {
-
+			int update = usi.update(currentUser);
+			if (update == 1) {
+				System.out.println("비밀번호가 수정되었습니다.");
+			}
 		} else if (menu == 4) {
 			user = usi.logOut(currentUser);
+			return false;
+		} else if (menu == 5) {
+			System.out.println("======================================================");
+			System.out.println("                 게임 사용 설명서 창입니다.");
+			System.out.println("           게임에 대한 기본적인 룰을 보실 수 있습니다.");
+			System.out.println("한국어 버전은 파파고 번역기를 사용하여 문맥이 매끄럽지 못할 수도 있습니다.");
+			System.out.println("======================================================");
+			while (true) {
+
+				System.out.println("=========================================================");
+				System.out.println("1.블랙잭(한) | 2.블랙적(영) | 3.원카드(한) | 4.원카드(영) | 5.창 닫기");
+				System.out.println("=========================================================");
+				int version = -1;
+				try {
+					version = Integer.parseInt(scn.next());
+				} catch (InputMismatchException e) {
+					e.printStackTrace();
+				}
+				if (version == 1) {
+					System.out.println(TranslateService.request("BlackJackmanual"));
+				} else if (version == 2) {
+					System.out.println(Manual.readManual("BlackJackmanual"));
+				} else if (version == 3) {
+					System.out.println(TranslateService.request("OneCardmanual"));
+				} else if (version == 4) {
+					System.out.println(Manual.readManual("OneCardmanual"));
+				} else if (version == 5) {
+					System.out.println("메뉴얼 창을 종료합니다.");
+					break;
+				}
+			}
 		}
+		return run;
 	}
 
 }
