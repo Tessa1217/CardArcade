@@ -2,6 +2,7 @@ package co.arcade.card.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import co.arcade.card.carddeck.Card;
@@ -37,21 +38,21 @@ public class BlackJack implements GameRules {
 	}
 
 	// 블랙잭 여부
-	public double blackJack(List<Card> playerCards, List<Card> dealerCards) {
-		double bj = 0;
-		int playerSum = sumCard(playerCards);
-		int dealerSum = sumCard(playerCards);
-		if (playerSum == 21) {
-			System.out.println("User BlackJack!");
-			bj = 1.5;
-		} else if (dealerSum == 21) {
-			System.out.println("Dealer BlackJack!");
-			bj = -2.0;
-		} else if (playerSum == 21 && dealerSum == 21) {
-			System.out.println("User, Dealer BlackJack. Push.");
-			return bj;
+	public int blackJack(Map<String, List<Card>> cardMap) {
+		int natural = 0;
+		int uSum = sumCard(cardMap.get("userCards"));
+		int dSum = sumCard(cardMap.get("dealerCards"));
+		if (uSum == 21 && dSum == 21) {
+			System.out.println("플레이어, 딜러 둘다 블랙잭입니다.");
+			return 1;
+		} else if (uSum == 21) {
+			System.out.println("플레이어가 블랙잭입니다.");
+			return 2;
+		} else if (dSum == 21) {
+			System.out.println("딜러가 블랙잭입니다.");
+			return -2;
 		}
-		return bj;
+		return natural;
 	}
 
 	// 카드의 합

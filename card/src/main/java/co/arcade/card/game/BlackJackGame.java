@@ -40,44 +40,51 @@ public class BlackJackGame {
 				betMoney = user.bet(money);
 				if (betMoney != 0) {
 					Map<String, List<Card>> cardMap = firstCards();
-					System.out.println("================");
-					System.out.println("1.Hit | 2.Stand");
-					System.out.println("================");
-					int choice = -1;
-					try {
-						choice = Integer.parseInt(scn.next());
-					} catch (InputMismatchException e) {
-						e.printStackTrace();
-					}
-					if (choice == 1) {
-						for (String mapkey : cardMap.keySet()) {
-							Card card = bj.draw();
-							cardMap.get(mapkey).add(card);
+					int blackJack = blackJack(cardMap);
+					if (blackJack == 0) {
+						System.out.println("================");
+						System.out.println("1.Hit | 2.Stand");
+						System.out.println("================");
+						int choice = -1;
+						try {
+							choice = Integer.parseInt(scn.next());
+						} catch (InputMismatchException e) {
+							e.printStackTrace();
 						}
-						int userSum = bj.sumCard(cardMap.get("userCards"));
-						int dealerSum = bj.sumCard(cardMap.get("dealerCards"));
-						int result = bj.bust(userSum, dealerSum);
-						if (result != 0) {
+						if (choice == 1) {
+							for (String mapkey : cardMap.keySet()) {
+								Card card = bj.draw();
+								cardMap.get(mapkey).add(card);
+							}
+							int userSum = bj.sumCard(cardMap.get("userCards"));
+							int dealerSum = bj.sumCard(cardMap.get("dealerCards"));
+							int result = bj.bust(userSum, dealerSum);
+							if (result != 0) {
+								displayUserCards(cardMap.get("userCards"));
+								openDealerCards(cardMap.get("dealerCards"));
+								betMoney = bj.winning(result, betMoney);
+								return betMoney;
+							}
+							if (result == 0) {
+								continue;
+							}
+						} else if (choice == 2) {
 							displayUserCards(cardMap.get("userCards"));
 							openDealerCards(cardMap.get("dealerCards"));
+							int playerSum = bj.sumCard(cardMap.get("userCards"));
+							int dealerSum = bj.sumCard(cardMap.get("dealerCards"));
+							int result = bj.result(playerSum, dealerSum);
 							betMoney = bj.winning(result, betMoney);
+							System.out.println("최종 금액 >>> " + betMoney);
 							return betMoney;
-						}
-						if (result == 0) {
-							continue;
-						}
-					} else if (choice == 2) {
-						displayUserCards(cardMap.get("userCards"));
-						openDealerCards(cardMap.get("dealerCards"));
-						int playerSum = bj.sumCard(cardMap.get("userCards"));
-						int dealerSum = bj.sumCard(cardMap.get("dealerCards"));
-						int result = bj.result(playerSum, dealerSum);
-						betMoney = bj.winning(result, betMoney);
-						System.out.println("최종 금액 >>> " + betMoney);
-						return betMoney;
 
-					} else {
-						System.out.println("다시 입력해주세요.");
+						} else {
+							System.out.println("다시 입력해주세요.");
+						}
+					} else if (blackJack > 0) {
+						System.out.println("게임 종료");
+						betMoney *= blackJack;
+						return betMoney;
 					}
 				}
 			} else if (menu == 2) {
@@ -96,16 +103,17 @@ public class BlackJackGame {
 		Map<String, List<Card>> cardMap = new HashMap<String, List<Card>>();
 		List<Card> userCards = bj.firstHand();
 		List<Card> dealerCards = bj.firstHand();
-		double result = bj.blackJack(userCards, dealerCards);
-		if (result == 0) {
-			displayUserCards(userCards);
-			displayDealerCards(dealerCards);
-			cardMap.put("userCards", userCards);
-			cardMap.put("dealerCards", dealerCards);
-		} else if (result != 0) {
-			return null;
-		}
+		displayUserCards(userCards);
+		displayDealerCards(dealerCards);
+		cardMap.put("userCards", userCards);
+		cardMap.put("dealerCards", dealerCards);
 		return cardMap;
+	}
+
+	// 블랙잭 계산
+	private int blackJack(Map<String, List<Card>> cardMap) {
+		int blackJack = bj.blackJack(cardMap);
+		return blackJack;
 	}
 
 	// 플레이어 카드 출력 메소드
@@ -116,12 +124,12 @@ public class BlackJackGame {
 
 	// 딜러 카드 출력 메소드 (마지막 1장은 보이지 않게 유지)
 	private void displayDealerCards(List<Card> dealerCards) {
-		dealer.showCard(dealerCards);
+		dealer.showBJCard(dealerCards);
 	}
 
 	// 딜러 카드 오픈 메소드
 	private void openDealerCards(List<Card> dealerCards) {
-		user.showCard(dealerCards);
+		dealer.showCard(dealerCards);
 		System.out.println(bj.sumCard(dealerCards));
 	}
 

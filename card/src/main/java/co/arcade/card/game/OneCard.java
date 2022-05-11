@@ -39,11 +39,18 @@ public class OneCard implements GameRules {
 		System.out.println(topCard.toString());
 	}
 
-	// 게임 카드 덱이 빌 경우 내려놓은 카드 덱을 재셔플
-	public Stack<Card> reshuffle() {
+	public boolean cardStackEmpty() {
 		if (cardStack.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+
+	// 게임 카드 덱이 빌 경우 내려놓은 카드 덱을 재셔플
+	public Stack<Card> reshuffle(boolean empty) {
+		if (empty) {
 			cardStack = CardDeck.shuffleDeck(discardStack);
-			firstOpenCard();
+			topCard = firstOpenCard();
 		}
 		return cardStack;
 	}
@@ -56,10 +63,10 @@ public class OneCard implements GameRules {
 		if (cardStack.isEmpty() == false) {
 			card = cardStack.pop();
 		}
-		if (cardStack.isEmpty()) {
-			cardStack = reshuffle();
-			card = draw();
-		}
+//		if (cardStack.isEmpty()) {
+//			cardStack = reshuffle();
+//			card = draw();
+//		}
 		return card;
 	}
 
@@ -137,10 +144,15 @@ public class OneCard implements GameRules {
 		List<Card> attackCard = new ArrayList<Card>();
 		if (card.getCardNo().equals("A")) {
 			for (int i = 0; i < 3; i++) {
+//				if (cardStack.isEmpty())
+//					cardStack = reshuffle();
 				attackCard.add(cardStack.pop());
 			}
-		} else if (card.getCardNo().equals("2")) {
+		}
+		if (card.getCardNo().equals("2")) {
 			for (int i = 0; i < 2; i++) {
+//				if (cardStack.isEmpty())
+//					cardStack = reshuffle();
 				attackCard.add(cardStack.pop());
 			}
 		}
