@@ -32,18 +32,6 @@ public class Card {
 
 	@Override
 	public String toString() {
-//		String card = "";
-//		card += "= = = = =";
-//		card += "\n";
-//		for (int i = 0; i < 3; i++) {
-//			if (i == 1) {
-//				card += "=  " + "0 " + "0" + "  =" + "\n";
-//			}
-//			card += "=       =" + "\n";
-//
-//		}
-//		card += "= = = = =";
-//		System.out.println(card);
 		return cardPattern + "[" + cardNo + "]";
 	}
 

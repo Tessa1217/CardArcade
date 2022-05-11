@@ -16,28 +16,28 @@ public class CardDeck {
 				card = Card.getCard(cardPattern.pattern(), i);
 				cardDeck.add(card);
 			}
-
 		}
 		return cardDeck;
-
 	}
 
 	public static Stack<Card> shuffleDeck() {
 		List<Card> cardDeck = cardDeck();
 		Collections.shuffle(cardDeck);
 		Stack<Card> cardStack = new Stack<Card>();
-		for (int i = 0; i < cardDeck.size(); i++) {
-			cardStack.push(cardDeck.get(i));
-		}
+		cardStack.addAll(cardDeck);
+//		for (int i = 0; i < cardDeck.size(); i++) {
+//			cardStack.push(cardDeck.get(i));
+//		}
 		return cardStack;
 	}
 
 	public static Stack<Card> shuffleDeck(Stack<Card> cardDeck) {
 		Collections.shuffle(cardDeck);
 		Stack<Card> cardStack = new Stack<Card>();
-		for (int i = 0; i < cardDeck.size(); i++) {
-			cardStack.push(cardDeck.get(i));
-		}
+		cardStack.addAll(cardDeck);
+//		for (int i = 0; i < cardDeck.size(); i++) {
+//			cardStack.push(cardDeck.get(i));
+//		}
 		return cardStack;
 
 	}
