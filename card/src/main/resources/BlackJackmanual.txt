@@ -1,0 +1,25 @@
+How to play blackjack
+
+Equally well known as Twenty-One.
+The player attempts to beat the dealer by getting a count as close to 21 as possible, without a bust (going over 21). 
+1. Before the deal begins, each player (dealer, player) places a bet.
+2. The dealer throughly shuffles portions of the pack and gives two cards face up to the player.
+3. The dealer takes two cards, the second card face down.
+4. When first two cards are not "blackjack", the player can decide between hit and stand options.
+5. If the player decides to "hit", the dealer gives another card.
+6. If the player decides to "stand", the dealer opens the face-down card.
+
+BlackJack 
+1. If a player's first two cards are an ace and a "ten-card" (a picture card or 10), giving a count of 21 in two cards, this is a natural or "blackjack".
+The player gets twice the bet. 
+2. If the dealer has a natural, the player loses twice the bet.
+3. If both players (dealer, player) have natural, the bet of the player is a stand-off and the player takes back his or her original bet.
+
+Bet
+1. If wins, the player gets twice the bet.
+2. If loses, the player loses the bet.
+
+Winning Options
+1. Blackjack 
+2. Dealer gets busted
+3. Player's count is bigger than dealer's count without going over 21 

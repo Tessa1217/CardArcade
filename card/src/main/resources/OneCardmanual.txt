@@ -1,0 +1,15 @@
+How to Play One Card
+
+1. The dealer deals out seven cards for two players (in this game, the dealer and the user).
+2. When both players have been dealt their hands, one card is laid face-up in the middle of the console to form the discard pile.
+3. The rest of the deck laid face-down (in the console environment, concealed) beside the top card forming the stock pile. 
+4. The player takes turn first, discarding one of his/her cards if the pattern or number matches with the top card.
+5. Then the dealer takes turn.
+6. The playing continues until one of players' cards runs out.
+
+Attack cards
+2 - damage level of 2 (draw 2 cards from the deck)
+Ace - damage level of 3 (draw 3 cards from the deck)
+
+
+
