@@ -79,6 +79,25 @@ public class UserService {
 		return false;
 	}
 
+	public int updateAccount(User user, String pwd) {
+		int update = -1;
+		String sql = "UPDATE user_table SET pwd = ? WHERE id = ? AND pwd = ?";
+
+		try {
+			conn = ds.getConnection();
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, pwd);
+			psmt.setString(2, user.getId());
+			psmt.setString(3, user.getPwd());
+			update = psmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection();
+		}
+		return update;
+	}
+
 	// DB Connection 끊기
 	private void closeConnection() {
 		try {

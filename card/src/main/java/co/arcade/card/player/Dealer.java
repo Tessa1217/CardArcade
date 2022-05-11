@@ -32,6 +32,14 @@ public class Dealer implements Player {
 	// Show Cards
 	@Override
 	public void showCard(List<Card> cards) {
+		System.out.println("Dealer Card Open");
+		for (Card card : cards) {
+			System.out.print(card.toString() + " ");
+		}
+		System.out.println();
+	}
+
+	public void showBJCard(List<Card> cards) {
 		System.out.println("Dealer Card");
 		for (int i = 0; i < cards.size(); i++) {
 			if (i == cards.size() - 1) {
@@ -39,6 +47,14 @@ public class Dealer implements Player {
 				break;
 			}
 			System.out.print(cards.get(i).toString() + " ");
+		}
+		System.out.println();
+	}
+
+	public void showOCard(List<Card> cards) {
+		System.out.println("Dealer Card");
+		for (int i = 0; i < cards.size(); i++) {
+			System.out.print("*[*] ");
 		}
 		System.out.println();
 	}
