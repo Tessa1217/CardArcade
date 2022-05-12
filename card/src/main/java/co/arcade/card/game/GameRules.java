@@ -1,12 +1,15 @@
 package co.arcade.card.game;
 
 import java.util.List;
+import java.util.Map;
 
 import co.arcade.card.carddeck.Card;
 
 public interface GameRules {
 
-	List<Card> firstHand();
+	static String[] cardOwner = { "user", "dealer" };
+
+	Map<String, List<Card>> firstHand();
 
 	Card draw();
 

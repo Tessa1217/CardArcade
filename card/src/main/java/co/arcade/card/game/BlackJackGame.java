@@ -1,7 +1,5 @@
 package co.arcade.card.game;
 
-import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -25,74 +23,75 @@ public class BlackJackGame {
 		user = currentUser;
 		int betMoney = 0;
 		while (true) {
-			System.out.println("1.Play Game | 2.Exit");
-			System.out.println("메뉴를 선택해주세요 >> ");
+			System.out.println("-------------  --------");
+			System.out.println(" 1.Play Game    2.Exit");
+			System.out.println("-------------  --------");
+			System.out.print("메뉴를 선택해주세요: ");
 			int menu = -1;
 			try {
 				menu = Integer.parseInt(scn.next());
-			} catch (InputMismatchException e) {
-				e.printStackTrace();
+			} catch (NumberFormatException e) {
+				System.out.println("숫자를 입력해주세요.");
 			}
 
 			if (menu == 1) {
-				System.out.println("베팅 금액을 선택해주세요 >>> ");
-				int money = Integer.parseInt(scn.next());
-				betMoney = user.bet(money);
-				if (betMoney != 0) {
-					Map<String, List<Card>> cardMap = firstCards();
-					int blackJack = blackJack(cardMap);
-					if (blackJack == 0) {
-						System.out.println("================");
-						System.out.println("1.Hit | 2.Stand");
-						System.out.println("================");
-						int choice = -1;
-						try {
-							choice = Integer.parseInt(scn.next());
-						} catch (InputMismatchException e) {
-							e.printStackTrace();
-						}
-						if (choice == 1) {
-							for (String mapkey : cardMap.keySet()) {
-								Card card = bj.draw();
-								cardMap.get(mapkey).add(card);
-							}
-							int userSum = bj.sumCard(cardMap.get("userCards"));
-							int dealerSum = bj.sumCard(cardMap.get("dealerCards"));
-							int result = bj.bust(userSum, dealerSum);
-							if (result != 0) {
-								displayUserCards(cardMap.get("userCards"));
-								openDealerCards(cardMap.get("dealerCards"));
-								betMoney = bj.winning(result, betMoney);
-								return betMoney;
-							}
-							if (result == 0) {
-								continue;
-							}
-						} else if (choice == 2) {
-							displayUserCards(cardMap.get("userCards"));
-							openDealerCards(cardMap.get("dealerCards"));
-							int playerSum = bj.sumCard(cardMap.get("userCards"));
-							int dealerSum = bj.sumCard(cardMap.get("dealerCards"));
-							int result = bj.result(playerSum, dealerSum);
-							betMoney = bj.winning(result, betMoney);
-							System.out.println("최종 금액 >>> " + betMoney);
-							return betMoney;
+				System.out.print("베팅 금액: ");
+				try {
+					betMoney = Integer.parseInt(scn.next());
+				} catch (NumberFormatException e) {
+					System.out.println("숫자를 입력해주세요.");
+				}
 
-						} else {
-							System.out.println("다시 입력해주세요.");
+				if (betMoney != 0) {
+					betMoney = user.bet(betMoney);
+					Map<String, List<Card>> cardMap = firstCards();
+					int firstResult = bj.firstRound(cardMap);
+					if (firstResult == 0) {
+						while (true) {
+							display(cardMap);
+
+							System.out.println("-----  --------");
+							System.out.println("1.Hit  2.Stand");
+							System.out.println("-----  --------");
+							int choice = -1;
+							try {
+								choice = Integer.parseInt(scn.next());
+							} catch (NumberFormatException e) {
+								System.out.println("숫자를 입력해주세요.");
+							}
+							if (choice == 1) {
+								for (String mapkey : cardMap.keySet()) {
+									cardMap.get(mapkey).add(bj.draw());
+								}
+								int result = bj.firstRound(cardMap);
+								if (result != 0) {
+									finalDisplay(cardMap);
+									betMoney = bj.winning(result, betMoney);
+									System.out.println("최종 금액: " + betMoney);
+									return betMoney;
+								}
+							} else if (choice == 2) {
+								finalDisplay(cardMap);
+								int result = bj.result(cardMap);
+								betMoney = bj.winning(result, betMoney);
+								System.out.println("최종 금액: " + betMoney);
+								return betMoney;
+							} else {
+								System.out.println("메뉴를 다시 입력해주세요.");
+							}
 						}
-					} else if (blackJack > 0) {
-						System.out.println("게임 종료");
-						betMoney *= blackJack;
+					} else if (firstResult != 0) {
+						betMoney = bj.winning(firstResult, betMoney);
+						System.out.println("최종 금액: " + betMoney);
 						return betMoney;
 					}
+				} else if (menu == 2) {
+					System.out.println("게임을 종료합니다.");
+					return 0;
+
+				} else {
+					System.out.println("메뉴를 다시 입력해주세요.");
 				}
-			} else if (menu == 2) {
-				System.out.println("게임을 종료합니다.");
-				return 0;
-
-			} else {
-
 			}
 		}
 
@@ -100,37 +99,27 @@ public class BlackJackGame {
 
 	// 첫 카드 맵으로 저장 및 출력
 	private Map<String, List<Card>> firstCards() {
-		Map<String, List<Card>> cardMap = new HashMap<String, List<Card>>();
-		List<Card> userCards = bj.firstHand();
-		List<Card> dealerCards = bj.firstHand();
-		displayUserCards(userCards);
-		displayDealerCards(dealerCards);
-		cardMap.put("userCards", userCards);
-		cardMap.put("dealerCards", dealerCards);
+		Map<String, List<Card>> cardMap = bj.firstHand();
 		return cardMap;
 	}
 
-	// 블랙잭 계산
-	private int blackJack(Map<String, List<Card>> cardMap) {
-		int blackJack = bj.blackJack(cardMap);
-		return blackJack;
+	// 카드 출력
+	private void display(Map<String, List<Card>> cardMap) {
+		int[] scores = bj.displaySum(cardMap);
+		user.showCard(cardMap.get("user"));
+		dealer.showBJCard(cardMap.get("dealer"));
+		System.out.println("---------------");
+		System.out.println("현재 유저 합계: " + scores[0]);
+		System.out.println("---------------");
 	}
 
-	// 플레이어 카드 출력 메소드
-	private void displayUserCards(List<Card> userCards) {
-		user.showCard(userCards);
-		System.out.println("유저 합계: " + bj.sumCard(userCards));
-	}
-
-	// 딜러 카드 출력 메소드 (마지막 1장은 보이지 않게 유지)
-	private void displayDealerCards(List<Card> dealerCards) {
-		dealer.showBJCard(dealerCards);
-	}
-
-	// 딜러 카드 오픈 메소드
-	private void openDealerCards(List<Card> dealerCards) {
-		dealer.showCard(dealerCards);
-		System.out.println(bj.sumCard(dealerCards));
+	private void finalDisplay(Map<String, List<Card>> cardMap) {
+		int[] scores = bj.displaySum(cardMap);
+		user.showCard(cardMap.get("user"));
+		dealer.showCard(cardMap.get("dealer"));
+		System.out.println("--------------------------");
+		System.out.println("유저 합계: " + scores[0] + " vs. 딜러 합계: " + scores[1]);
+		System.out.println("--------------------------");
 	}
 
 }

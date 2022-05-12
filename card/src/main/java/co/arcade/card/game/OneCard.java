@@ -1,7 +1,9 @@
 package co.arcade.card.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import co.arcade.card.carddeck.Card;
@@ -15,15 +17,17 @@ public class OneCard implements GameRules {
 
 	// 첫 카드 배분 (원 카드 7장)
 	@Override
-	public List<Card> firstHand() {
-
-		List<Card> playerCard = new ArrayList<Card>();
-
-		for (int i = 0; i < 7; i++) {
-			playerCard.add(cardStack.pop());
+	public Map<String, List<Card>> firstHand() {
+		Map<String, List<Card>> cardMap = new HashMap<String, List<Card>>();
+		List<Card> cards;
+		for (int i = 0; i < 2; i++) {
+			cards = new ArrayList<Card>();
+			for (int j = 0; j < 7; j++) {
+				cards.add(cardStack.pop());
+			}
+			cardMap.put(GameRules.cardOwner[i], cards);
 		}
-
-		return playerCard;
+		return cardMap;
 	}
 
 	private Card firstOpenCard() {
@@ -35,8 +39,10 @@ public class OneCard implements GameRules {
 	}
 
 	public void openTopCard() {
-		System.out.print("TOP CARD: ");
+		System.out.println("-----------------");
+		System.out.print("  TOP CARD: ");
 		System.out.println(topCard.toString());
+		System.out.println("-----------------");
 	}
 
 	public boolean cardStackEmpty() {

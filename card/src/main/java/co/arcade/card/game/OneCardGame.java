@@ -45,15 +45,15 @@ public class OneCardGame {
 						Map<String, List<Card>> cardMap = firstCards();
 						boolean run = true;
 						while (run) {
-							if (cardMap.get("userCards").size() == 0) {
+							if (cardMap.get("user").size() == 0) {
 								System.out.println("유저가 승리하셨습니다.");
-								betMoney = oc.winning(cardMap.get("userCards").size(), betMoney);
+								betMoney = oc.winning(cardMap.get("user").size(), betMoney);
 								run = false;
 								return betMoney;
 							}
-							if (cardMap.get("dealerCards").size() == 0) {
+							if (cardMap.get("dealer").size() == 0) {
 								System.out.println("딜러가 승리하셨습니다.");
-								betMoney = oc.winning(cardMap.get("userCards").size(), betMoney);
+								betMoney = oc.winning(cardMap.get("user").size(), betMoney);
 								run = false;
 								return betMoney;
 							}
@@ -74,14 +74,14 @@ public class OneCardGame {
 								System.out.println("몇 번째 카드를 내시겠습니까?");
 								int idx = Integer.parseInt(scn.next());
 								System.out.println("게임 진행: ");
-								List<Card> playerAttack = oc.discard(cardMap.get("userCards"), idx - 1);
+								List<Card> playerAttack = oc.discard(cardMap.get("user"), idx - 1);
 								if (playerAttack.size() != 0) {
-									cardMap.get("dealerCards").addAll(playerAttack);
+									cardMap.get("dealer").addAll(playerAttack);
 									System.out.println("딜러가 " + playerAttack.size() + "장 먹었습니다.");
 								}
-								List<Card> attack = oc.autoPlaying(cardMap.get("dealerCards"));
+								List<Card> attack = oc.autoPlaying(cardMap.get("dealer"));
 								if (attack.size() != 0) {
-									cardMap.get("userCards").addAll(attack);
+									cardMap.get("user").addAll(attack);
 									System.out.println("유저가 " + attack.size() + "장 먹었습니다.");
 								}
 								System.out.println();
@@ -93,11 +93,11 @@ public class OneCardGame {
 									oc.reshuffle(empty);
 								}
 								System.out.println("게임 진행: ");
-								cardMap.get("userCards").add(oc.draw());
+								cardMap.get("user").add(oc.draw());
 								System.out.println("유저가 한 장 먹습니다.");
-								List<Card> attack = oc.autoPlaying(cardMap.get("dealerCards"));
+								List<Card> attack = oc.autoPlaying(cardMap.get("dealer"));
 								if (attack.size() != 0) {
-									cardMap.get("userCards").addAll(attack);
+									cardMap.get("user").addAll(attack);
 									System.out.println("유저가 " + attack.size() + "장 먹었습니다.");
 								}
 								System.out.println();
@@ -106,6 +106,8 @@ public class OneCardGame {
 
 						}
 
+					} else if (betMoney == 0) {
+						System.out.println("베팅을 하셔야 게임 진행이 가능합니다.");
 					}
 				}
 			} else if (menu == 2) {
@@ -118,24 +120,17 @@ public class OneCardGame {
 
 	private Map<String, List<Card>> firstCards() {
 		Map<String, List<Card>> cardMap = new HashMap<String, List<Card>>();
-		List<Card> userCards = user.getCard(oc.firstHand());
-		List<Card> dealerCards = dealer.getCard(oc.firstHand());
-		System.out.print("유저 카드: ");
-		user.showCard(userCards);
+		cardMap = oc.firstHand();
+		user.showCard(cardMap.get("user"));
 		oc.openTopCard();
-		System.out.print("딜러 카드: ");
-		dealer.showOCard(dealerCards);
-		cardMap.put("userCards", userCards);
-		cardMap.put("dealerCards", dealerCards);
+		dealer.showOCard(cardMap.get("dealer"));
 		return cardMap;
 	}
 
 	private void displayCards(Map<String, List<Card>> cardMap) {
-		System.out.print("유저 카드: ");
-		user.showCard(cardMap.get("userCards"));
+		user.showCard(cardMap.get("user"));
 		oc.openTopCard();
-		System.out.print("딜러 카드: ");
-		dealer.showOCard(cardMap.get("dealerCards"));
+		dealer.showOCard(cardMap.get("dealer"));
 	}
 
 }

@@ -1,6 +1,7 @@
 package co.arcade.card.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -15,16 +16,33 @@ public class BlackJack implements GameRules {
 
 	// 첫번째 카드 배분
 	@Override
-	public List<Card> firstHand() {
-
-		List<Card> playerCard = new ArrayList<Card>();
-
+	public Map<String, List<Card>> firstHand() {
+		Map<String, List<Card>> cardMap = new HashMap<String, List<Card>>();
+		List<Card> cards = new ArrayList<Card>();
 		for (int i = 0; i < 2; i++) {
-			Card card = cardStack.pop();
-			playerCard.add(card);
+			for (int j = 0; j < 2; j++) {
+				Card card = cardStack.pop();
+				cards.add(card);
+			}
+			cardMap.put(GameRules.cardOwner[i], cards);
+			cards = new ArrayList<Card>();
 		}
+		return cardMap;
+	}
 
-		return playerCard;
+	public int firstRound(Map<String, List<Card>> cardMap) {
+		int natural = blackJack(cardMap);
+		if (natural != 0) {
+			return natural;
+		}
+		int bust = bust(cardMap);
+		if (bust != 0) {
+			return bust;
+		}
+		if (natural == bust) {
+			return 0;
+		}
+		return 0;
 	}
 
 	// 카드 추가
@@ -37,109 +55,122 @@ public class BlackJack implements GameRules {
 		return card;
 	}
 
+	// 1.유저 승리, 2.푸쉬, 3.딜러 승리, 4.딜러 버스트, 5.유저 버스트
+
 	// 블랙잭 여부
-	public int blackJack(Map<String, List<Card>> cardMap) {
-		int natural = 0;
-		int uSum = sumCard(cardMap.get("userCards"));
-		int dSum = sumCard(cardMap.get("dealerCards"));
-		if (uSum == 21 && dSum == 21) {
-			System.out.println("플레이어, 딜러 둘다 블랙잭입니다.");
-			return 1;
-		} else if (uSum == 21) {
-			System.out.println("플레이어가 블랙잭입니다.");
-			return 2;
-		} else if (dSum == 21) {
-			System.out.println("딜러가 블랙잭입니다.");
-			return -2;
-		}
-		return natural;
-	}
-
-	// 카드의 합
-	public int sumCard(List<Card> playerCard) {
-		int score = 0;
-		boolean containA = false;
-		for (int i = 0; i < playerCard.size(); i++) {
-			if (playerCard.get(i).getCardNo() == "J" || playerCard.get(i).getCardNo() == "A") {
-				score += 11;
-				if (playerCard.get(i).getCardNo() == "A") {
-					containA = true;
-				}
-			} else if (playerCard.get(i).getCardNo() == "Q") {
-				score += 12;
-			} else if (playerCard.get(i).getCardNo() == "K") {
-				score += 13;
-			} else {
-				score += Integer.parseInt(playerCard.get(i).getCardNo());
-			}
-		}
-		if (score > 21 && containA) {
-			score -= 10;
-		}
-		return score;
-	}
-
-	// 카드의 합을 이용하여 결과 산출
-	public int result(int playerSum, int dealerSum) {
+	private int blackJack(Map<String, List<Card>> cardMap) {
+		int[] natural = new int[2];
+		natural = sumCard(cardMap);
 		int result = 0;
-		if (playerSum == 21) {
-			if (dealerSum == 21) {
-				System.out.println("User, Dealer PUSH");
-				return 2;
-			} else if (dealerSum < 21) {
-				System.out.println("User Wins");
-				return 1;
-			} else if (dealerSum > 21) {
-				System.out.println("Dealer Busted, User Wins");
-				return 1;
-			}
-		} else if (playerSum > 21) {
-			if (dealerSum == 21) {
-				System.out.println("User Busted, Dealer Wins");
-				return 3;
-			} else if (dealerSum < 21) {
-				System.out.println("User Busted, Dealer Wins");
-				return 3;
-			} else if (dealerSum > 21) {
-				System.out.println("User, Dealer Busted, Dealer Wins");
-				return 3;
-			}
-
-		} else if (playerSum < 21) {
-			if (dealerSum == 21) {
-				System.out.println("Dealer Wins");
-				return 3;
-			} else if (dealerSum < 21) {
-				if (playerSum > dealerSum) {
-					System.out.println("Player Wins");
-					return 1;
-				} else if (playerSum < dealerSum) {
-					System.out.println("Dealer Wins");
-					return 3;
-				} else if (playerSum == dealerSum) {
-					System.out.println("Player, Dealer PUSH");
-					return 2;
-				}
-			} else if (dealerSum > 21) {
-				System.out.println("Dealer Busted, User Wins");
-				return 1;
-			}
+		if (natural[0] == 21 && natural[1] == 21) {
+			System.out.println("플레이어, 딜러 둘 다 블랙잭입니다.");
+			result = 2;
+		} else if (natural[0] == 21) {
+			System.out.println("플레이어가 블랙잭입니다.");
+			result = 1;
+		} else if (natural[1] == 21) {
+			System.out.println("딜러가 블랙잭입니다.");
+			result = 3;
 		}
 		return result;
 	}
 
-	public int bust(int userSum, int dealerSum) {
+	// 버스트 여부
+	private int bust(Map<String, List<Card>> cardMap) {
+		int[] bust = sumCard(cardMap);
 		int result = 0;
+		if (bust[0] > 21 && bust[1] > 21) {
+			System.out.println("둘 다 버스트입니다.");
+			result = 5;
+		} else if (bust[0] > 21) {
+			System.out.println("유저 버스트입니다.");
+			result = 5;
+		} else if (bust[1] > 21) {
+			System.out.println("딜러 버스트입니다.");
+			result = 4;
+		}
+		return result;
+	}
 
-		if (userSum > 21) {
-			System.out.println("** User Busted **");
-			result = 3;
-		} else if (dealerSum > 21) {
-			System.out.println("** Dealer Busted **");
-			result = 1;
-		} else if (userSum > 21 && dealerSum > 21) {
-			System.out.println("** User, Dealer Busted, User Loses! **");
-			result = 2;
+	// 카드의 합
+	private int[] sumCard(Map<String, List<Card>> cardMap) {
+		int[] scores = new int[2];
+		for (String mapkey : cardMap.keySet()) {
+			List<Card> cards = cardMap.get(mapkey);
+			int score = 0;
+			boolean containA = false;
+			for (int i = 0; i < cards.size(); i++) {
+				if (cards.get(i).getCardNo() == "J" || cards.get(i).getCardNo() == "A") {
+					score += 11;
+					if (cards.get(i).getCardNo() == "A") {
+						containA = true;
+					}
+				} else if (cards.get(i).getCardNo() == "Q") {
+					score += 12;
+				} else if (cards.get(i).getCardNo() == "K") {
+					score += 13;
+				} else {
+					score += Integer.parseInt(cards.get(i).getCardNo());
+				}
+			}
+			if (score > 21 && containA) {
+				score -= 10;
+			}
+			if (mapkey.equals("user")) {
+				scores[0] = score;
+			}
+			if (mapkey.equals("dealer")) {
+				scores[1] = score;
+			}
+		}
+		return scores;
+	}
+
+	public int[] displaySum(Map<String, List<Card>> cardMap) {
+		int[] scores = new int[2];
+		scores = sumCard(cardMap);
+		return scores;
+	}
+
+	// 카드의 합을 이용하여 결과 산출
+	// 1.유저 승리, 2.푸쉬, 3.딜러 승리, 4.딜러 버스트, 5.유저 버스트
+	public int result(Map<String, List<Card>> cardMap) {
+		int[] scores = sumCard(cardMap);
+		int result = 0;
+		if (scores[0] > 21 && scores[1] > 21) {
+			System.out.println("유저, 딜러 버스트! 딜러가 이겼습니다.");
+			return 5;
+		} else if (scores[0] == 21) {
+			if (scores[1] == 21) {
+				System.out.println("PUSH");
+				return 2;
+			} else if (scores[1] < 21) {
+				System.out.println("유저가 이겼습니다.");
+				return 1;
+			}
+		} else if (scores[0] > 21) {
+			System.out.println("유저 버스트! 딜러가 이겼습니다.");
+			return 5;
+		} else if (scores[0] < 21) {
+			if (scores[1] == 21) {
+				System.out.println("딜러가 이겼습니다.");
+				return 3;
+			} else if (scores[1] < 21) {
+				System.out.println("유저가 이겼습니다.");
+				return 1;
+			} else if (scores[0] < scores[1]) {
+				System.out.println("딜러가 이겼습니다.");
+				return 3;
+			} else if (scores[0] > scores[1]) {
+				System.out.println("유저가 이겼습니다.");
+				return 1;
+			} else if (scores[0] == scores[1]) {
+				System.out.println("PUSH");
+				return 2;
+			}
+		} else if (scores[1] > 21) {
+			System.out.println("딜러 버스트! 유저가 이겼습니다.");
+			return 4;
 		}
 		return result;
 	}
@@ -148,11 +179,15 @@ public class BlackJack implements GameRules {
 	@Override
 	public int winning(int result, int bet) {
 		if (result == 1) {
-			bet *= 2;
+			bet *= 1.5;
 		} else if (result == 2) {
 			return bet;
 		} else if (result == 3) {
-			bet *= -1;
+			bet *= -1.5;
+		} else if (result == 4) {
+			bet *= 2;
+		} else if (result == 5) {
+			bet *= -2;
 		}
 		return bet;
 	}
