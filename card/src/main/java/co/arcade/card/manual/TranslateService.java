@@ -15,8 +15,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class TranslateService {
-	private static String clientId = "";
-	private static String clientSecret = "";
+	private static String clientId = "VHh1tKam0ftZGAHKiMzd";
+	private static String clientSecret = "Fcz9z5hWfX";
 	private static String serviceURL = "https://openapi.naver.com/v1/papago/n2mt";
 	private static String text;
 	private static InputStreamReader isr;
@@ -35,7 +35,6 @@ public class TranslateService {
 		requestHeaders.put("X-Naver-Client-Secret", clientSecret);
 
 		String responseBody = setParam(serviceURL, requestHeaders, text);
-		System.out.println(responseBody);
 		responseBody = translatedManual(responseBody);
 		return responseBody;
 	}
@@ -64,7 +63,6 @@ public class TranslateService {
 				while ((context = br.readLine()) != null) {
 					sb.append(context);
 				}
-				System.out.println(sb.toString());
 				return sb.toString();
 			} else {
 				return con.getResponseMessage();
