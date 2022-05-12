@@ -1,7 +1,7 @@
 package co.arcade.card.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -22,58 +22,78 @@ public class OneCardGame {
 	// 원카드 생성
 	private static OneCard oc = new OneCard();
 
+	// 공격 카드 리스트 생성
+	private List<Card> attack = new ArrayList<Card>();
+
 	// 실행 메소드
 	public int execute(User currentUser) {
 		user = currentUser;
 		int betMoney = 0;
 		while (true) {
+			System.out.println("---------------------");
 			System.out.println("1.Play Game | 2.Exit");
-			System.out.println("메뉴를 선택해주세요 >> ");
+			System.out.println("---------------------");
+			System.out.print("메뉴: ");
 			int menu = -1;
 			try {
 				menu = Integer.parseInt(scn.next());
-			} catch (InputMismatchException e) {
-				e.printStackTrace();
+			} catch (NumberFormatException e) {
+				System.out.println("숫자를 입력해주세요.");
 			}
 			if (menu == 1) {
 				boolean mainRun = true;
 				while (mainRun) {
-					System.out.println("베팅 금액을 선택해주세요 >> ");
-					int money = Integer.parseInt(scn.next());
+
+					System.out.print("베팅 금액: ");
+					int money = -1;
+					try {
+						money = Integer.parseInt(scn.next());
+					} catch (NumberFormatException e) {
+						System.out.println("숫자를 입력해주세요.");
+					}
 					betMoney = user.bet(money);
+
 					if (betMoney != 0) {
 						Map<String, List<Card>> cardMap = firstCards();
 						boolean run = true;
 						while (run) {
-							if (cardMap.get("user").size() == 0) {
-								System.out.println("유저가 승리하셨습니다.");
-								betMoney = oc.winning(cardMap.get("user").size(), betMoney);
+							if (cardMap.get("user").size() == 0 || cardMap.get("dealer").size() == 0) {
+								System.out.println("게임 종료");
 								run = false;
-								return betMoney;
+								return betMoney = oc.winning(cardMap.get("user").size(), betMoney);
 							}
-							if (cardMap.get("dealer").size() == 0) {
-								System.out.println("딜러가 승리하셨습니다.");
-								betMoney = oc.winning(cardMap.get("user").size(), betMoney);
-								run = false;
-								return betMoney;
-							}
-							System.out.println("====================");
-							System.out.println("1. Discard | 2. Draw");
-							System.out.println("====================");
+							System.out.println("------------ ----------");
+							System.out.println(" 1. Discard   2. Draw");
+							System.out.println("------------ ----------");
 							int choice = -1;
 							try {
 								choice = Integer.parseInt(scn.next());
-							} catch (InputMismatchException e) {
+							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							}
+							boolean empty = oc.cardStackEmpty();
+							if (empty) {
+								oc.reshuffle(empty);
+							}
 							if (choice == 1) {
-								boolean empty = oc.cardStackEmpty();
-								if (empty) {
-									oc.reshuffle(empty);
-								}
 								System.out.println("몇 번째 카드를 내시겠습니까?");
-								int idx = Integer.parseInt(scn.next());
+								int idx = -1;
+								try {
+									idx = Integer.parseInt(scn.next());
+								} catch (NumberFormatException e) {
+									System.out.println("숫자를 입력해주세요.");
+								}
+								Card userCard = oc.discard(cardMap.get("user").get(idx - 1));
+								if (userCard != null) {
+									attack = oc.attack(userCard);
+								}
+								if (attack.size() != 0) {
+									Card dealerCard = oc.autoPlaying(cardMap.get("dealer"));
+									if 
+								}
+
 								System.out.println("게임 진행: ");
+
 								List<Card> playerAttack = oc.discard(cardMap.get("user"), idx - 1);
 								if (playerAttack.size() != 0) {
 									cardMap.get("dealer").addAll(playerAttack);
@@ -88,10 +108,6 @@ public class OneCardGame {
 								displayCards(cardMap);
 
 							} else if (choice == 2) {
-								boolean empty = oc.cardStackEmpty();
-								if (empty) {
-									oc.reshuffle(empty);
-								}
 								System.out.println("게임 진행: ");
 								cardMap.get("user").add(oc.draw());
 								System.out.println("유저가 한 장 먹습니다.");

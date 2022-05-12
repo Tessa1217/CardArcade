@@ -73,6 +73,34 @@ public class OneCard implements GameRules {
 	}
 
 	// 카드 내려놓기
+	public Card discard(Card discardCard) {
+		String discardP = discardCard.getCardPattern();
+		String discardNo = discardCard.getCardNo();
+		String currentP = topCard.getCardPattern();
+		String currentNo = topCard.getCardNo();
+
+		if (currentP.equals(discardP) || currentNo.equals(discardNo)) {
+			discardStack.push(discardCard);
+			topCard = discardStack.peek();
+			return discardCard;
+		}
+		return null;
+	}
+
+	public List<Card> attack(Card card) {
+		List<Card> attackCard = new ArrayList<Card>();
+		if (card.getCardNo().equals("A")) {
+			for (int i = 0; i < 3; i++) {
+				attackCard.add(cardStack.pop());
+			}
+		}
+		if (card.getCardNo().equals("2")) {
+			for (int i = 0; i < 2; i++) {
+				attackCard.add(cardStack.pop());
+			}
+		}
+		return attackCard;
+	}
 
 	public List<Card> discard(List<Card> playerCard, int discardIdx) {
 		Card card = topCard;
@@ -105,55 +133,61 @@ public class OneCard implements GameRules {
 
 	// 게임 후 베팅 금액 계산
 	@Override
-	public int winning(int playerCard, int bet) {
-		if (playerCard == 0) {
+	public int winning(int cnt, int bet) {
+		if (cnt == 0) {
 			bet *= 2;
-		} else if (playerCard > 0) {
-			bet *= -1;
+			System.out.println("유저 승리. 최종 금액은 " + bet + "입니다.");
+		} else if (cnt > 0) {
+			bet *= -2;
+			System.out.println("딜러 승리. 최종 금액은 " + bet + "입니다.");
 		}
 		return bet;
 	}
 
 	// 딜러
-	public List<Card> autoPlaying(List<Card> dealerCard) {
-		Card card = null;
-		List<Card> attack = new ArrayList<Card>();
+	public Card autoPlaying(List<Card> dealerCard) {
+//		Card card = null;
+//		List<Card> attack = new ArrayList<Card>();
 		for (int i = 0; i < dealerCard.size(); i++) {
-			Card discard = dealerCard.get(i);
-			if (discard.getCardPattern().equals(topCard.getCardPattern())
-					|| discard.getCardNo().equals(topCard.getCardNo())) {
+			Card card = dealerCard.get(i);
+			if (card.getCardPattern().equals(topCard.getCardPattern())
+					|| card.getCardNo().equals(topCard.getCardNo())) {
 				card = dealerCard.remove(i);
-				discardStack.push(card);
 				System.out.println("딜러가 " + card.toString() + "를 냈습니다.");
-				attack = attack(card);
+				discardStack.push(card);
 				topCard = discardStack.peek();
-				if (attack.size() != 0) {
-					return attack;
-				}
-				break;
+				return card;
 			}
 			if (i == dealerCard.size() - 1) {
 				card = draw();
 				dealerCard.add(card);
 				System.out.println("딜러가 한 장 먹습니다.");
-				break;
 			}
 		}
-		return attack;
+		return null;
+
+//		for (int i = 0; i < dealerCard.size(); i++) {
+//			Card discard = dealerCard.get(i);
+//			if (discard.getCardPattern().equals(topCard.getCardPattern())
+//					|| discard.getCardNo().equals(topCard.getCardNo())) {
+//				card = dealerCard.remove(i);
+//				discardStack.push(card);
+//				System.out.println("딜러가 " + card.toString() + "를 냈습니다.");
+//				attack = attack(card);
+//				topCard = discardStack.peek();
+//				if (attack.size() != 0) {
+//					return attack;
+//				}
+//				break;
+//			}
+//			if (i == dealerCard.size() - 1) {
+//				card = draw();
+//				dealerCard.add(card);
+//				System.out.println("딜러가 한 장 먹습니다.");
+//				break;
+//			}
+//		}
+//		return attack;
 	}
 
-	public List<Card> attack(Card card) {
-		List<Card> attackCard = new ArrayList<Card>();
-		if (card.getCardNo().equals("A")) {
-			for (int i = 0; i < 3; i++) {
-				attackCard.add(cardStack.pop());
-			}
-		}
-		if (card.getCardNo().equals("2")) {
-			for (int i = 0; i < 2; i++) {
-				attackCard.add(cardStack.pop());
-			}
-		}
-		return attackCard;
-	}
 }

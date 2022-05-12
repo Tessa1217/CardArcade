@@ -43,7 +43,6 @@ public class DataSource { // Singleton
 
 			Class.forName(driver);
 			conn = DriverManager.getConnection(url, id, pwd);
-			System.out.println("DB Connection");
 
 		} catch (IOException e1) {
 			e1.printStackTrace();
