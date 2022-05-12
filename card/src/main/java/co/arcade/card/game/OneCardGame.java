@@ -84,8 +84,32 @@ public class OneCardGame {
 									System.out.println("숫자를 입력해주세요.");
 								}
 								Card userCard = oc.discard(cardMap.get("user").get(idx - 1));
+								if (userCard == null) {
+									cardMap.get("user").add(oc.draw());
+								} else {
+									attack = oc.attack(userCard);
+								}
+								
+								
+								while (true) {
+									Card userCard = oc.discard(cardMap.get("user").get(idx - 1));
+									attack = oc.attack(userCard);
+									if (userCard == null) {
+										cardMap.get("user").add(oc.draw());
+									} else if (userCard != null && attack) {
+										attack = 
+									}
+								}
+								
+								Card userCard = oc.discard(cardMap.get("user").get(idx - 1));
 								if (userCard != null) {
 									attack = oc.attack(userCard);
+									if (attack.size() != 0) {
+										Card dealerCard = oc.autoPlaying(cardMap.get("dealer"));
+										if (oc.attack(dealerCard).size() > 0) {
+											
+										}
+									}
 								}
 								if (attack.size() != 0) {
 									Card dealerCard = oc.autoPlaying(cardMap.get("dealer"));
