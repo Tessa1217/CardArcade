@@ -16,6 +16,7 @@ public class User implements Player {
 	private String pwd;
 	private int money;
 	private String email;
+	private String contact;
 
 	// Methods
 	// Bet
@@ -28,26 +29,12 @@ public class User implements Player {
 		return money;
 	}
 
-	// Get cards (BlackJack, OneCard)
-	@Override
-	public List<Card> getCard(List<Card> cards) {
-		List<Card> userCards = cards;
-		return userCards;
-	}
-
-	// Draw one card from stack
-	@Override
-	public List<Card> drawCard(List<Card> cards, Card card) {
-		cards.add(card);
-		return cards;
-	}
-
 	// Show cards
 	@Override
 	public void showCard(List<Card> cards) {
 		System.out.println("유저 카드: ");
 		for (int i = 0; i < cards.size(); i++) {
-			if (i == 7) {
+			if (i % 7 == 0) {
 				System.out.println();
 			}
 			System.out.print((i + 1) + ":" + cards.get(i).toString() + " ");
