@@ -18,12 +18,13 @@ public class UserService {
 	public int signUp(User user) {
 
 		int insert = -1;
-		String sql = "INSERT INTO user_table VALUES (?, ?, default)";
+		String sql = "INSERT INTO user_table VALUES (?, ?, default, ?)";
 		try {
 			conn = ds.getConnection();
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, user.getId());
 			psmt.setString(2, user.getPwd());
+			psmt.setString(3, user.getEmail());
 			insert = psmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -31,6 +32,25 @@ public class UserService {
 			closeConnection();
 		}
 		return insert;
+	}
+
+	public int findId(String id) {
+		int idCnt = 0;
+		String sql = "SELECT COUNT(ID) FROM USER_TABLE WHERE ID = ?";
+		try {
+			conn = ds.getConnection();
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, id);
+			rs = psmt.executeQuery();
+			if (rs.next()) {
+				idCnt = rs.getInt("count(id)");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection();
+		}
+		return idCnt;
 	}
 
 	// 로그인
@@ -79,6 +99,7 @@ public class UserService {
 		return false;
 	}
 
+	// 비밀번호 변경
 	public int updateAccount(User user, String pwd) {
 		int update = -1;
 		String sql = "UPDATE user_table SET pwd = ? WHERE id = ? AND pwd = ?";
@@ -96,6 +117,26 @@ public class UserService {
 			closeConnection();
 		}
 		return update;
+	}
+
+	// 비밀번호 찾기
+	public User findPwd(User user) {
+		String sql = "SELECT PWD FROM USER_TABLE WHERE ID = ? AND EMAIL = ?";
+		try {
+			conn = ds.getConnection();
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, user.getId());
+			psmt.setString(2, user.getEmail());
+			rs = psmt.executeQuery();
+			if (rs.next()) {
+				user.setPwd(rs.getString("pwd"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection();
+		}
+		return user;
 	}
 
 	// DB Connection 끊기

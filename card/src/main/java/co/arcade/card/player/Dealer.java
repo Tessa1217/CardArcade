@@ -32,7 +32,7 @@ public class Dealer implements Player {
 	// Show Cards
 	@Override
 	public void showCard(List<Card> cards) {
-		System.out.println("Dealer Card Open");
+		System.out.println("딜러 카드 오픈: ");
 		for (Card card : cards) {
 			System.out.print(card.toString() + " ");
 		}
@@ -40,7 +40,7 @@ public class Dealer implements Player {
 	}
 
 	public void showBJCard(List<Card> cards) {
-		System.out.println("Dealer Card");
+		System.out.println("딜러 카드: ");
 		for (int i = 0; i < cards.size(); i++) {
 			if (i == cards.size() - 1) {
 				System.out.print("*[*] ");
@@ -52,7 +52,7 @@ public class Dealer implements Player {
 	}
 
 	public void showOCard(List<Card> cards) {
-		System.out.println("Dealer Card");
+		System.out.print("딜러 카드: ");
 		for (int i = 0; i < cards.size(); i++) {
 			System.out.print("*[*] ");
 		}
