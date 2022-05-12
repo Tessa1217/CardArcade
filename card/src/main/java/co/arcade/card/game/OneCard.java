@@ -69,10 +69,6 @@ public class OneCard implements GameRules {
 		if (cardStack.isEmpty() == false) {
 			card = cardStack.pop();
 		}
-//		if (cardStack.isEmpty()) {
-//			cardStack = reshuffle();
-//			card = draw();
-//		}
 		return card;
 	}
 
@@ -150,15 +146,11 @@ public class OneCard implements GameRules {
 		List<Card> attackCard = new ArrayList<Card>();
 		if (card.getCardNo().equals("A")) {
 			for (int i = 0; i < 3; i++) {
-//				if (cardStack.isEmpty())
-//					cardStack = reshuffle();
 				attackCard.add(cardStack.pop());
 			}
 		}
 		if (card.getCardNo().equals("2")) {
 			for (int i = 0; i < 2; i++) {
-//				if (cardStack.isEmpty())
-//					cardStack = reshuffle();
 				attackCard.add(cardStack.pop());
 			}
 		}
