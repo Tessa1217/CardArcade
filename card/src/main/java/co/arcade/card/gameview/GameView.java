@@ -41,9 +41,12 @@ public class GameView {
 		boolean run = true;
 		user = currentUser;
 		System.out.println(currentUser.getId() + "님의 현재 잔고: " + currentUser.getMoney() + "원");
-		System.out.println("=============================================");
-		System.out.println("1.블랙잭 | 2.원카드 | 3.계정수정 | 4.로그아웃 | 5.설명서");
-		System.out.println("=============================================");
+		System.out.println("==============================================");
+		System.out.println("   ♠   ♦   ♥   ♣  CARD GAME  ♠   ♦   ♥   ♣");
+		System.out.println("-------  -------  ---------  --------  -------");
+		System.out.println("1.블랙잭   2.원 카드  3.계정 수정   4.로그아웃   5.설명서");
+		System.out.println("-------  -------  ---------  --------  -------");
+		System.out.println("==============================================");
 		System.out.println("메뉴를 선택하세요 >>> ");
 		int menu = -1;
 		try {
@@ -70,16 +73,16 @@ public class GameView {
 			user = usi.logOut(currentUser);
 			return false;
 		} else if (menu == 5) {
-			System.out.println("======================================================");
-			System.out.println("                 게임 사용 설명서 창입니다.");
-			System.out.println("           게임에 대한 기본적인 룰을 보실 수 있습니다.");
-			System.out.println("한국어 버전은 파파고 번역기를 사용하여 문맥이 매끄럽지 못할 수도 있습니다.");
-			System.out.println("======================================================");
 			while (true) {
 
-				System.out.println("=========================================================");
-				System.out.println("1.블랙잭(한) | 2.블랙적(영) | 3.원카드(한) | 4.원카드(영) | 5.창 닫기");
-				System.out.println("=========================================================");
+				System.out.println("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = ");
+				System.out.println("                          게임 메뉴얼");
+				System.out.println("   ---------  ----------  ---------  ---------  --------");
+				System.out.println("   1.블랙잭(한)  2.블랙적(영)  3.원카드(한)  4.원카드(영)  5.창 닫기");
+				System.out.println("   ---------  ----------  ---------  ---------  --------");
+				System.out.println("                           WARNING");
+				System.out.println("    한국어 버전은 파파고 번역기를 사용하여 번역이 매끄럽지 못할 수도 있습니다.");
+				System.out.println("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = ");
 				int version = -1;
 				try {
 					version = Integer.parseInt(scn.next());
