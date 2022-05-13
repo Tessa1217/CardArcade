@@ -34,6 +34,7 @@ public class UserService {
 		return insert;
 	}
 
+	// 아이디 중복 찾기
 	public int findId(String id) {
 		int idCnt = 0;
 		String sql = "SELECT COUNT(ID) FROM USER_TABLE WHERE ID = ?";
@@ -76,8 +77,8 @@ public class UserService {
 		return player;
 	}
 
-	// 로그아웃
-	public boolean logOut(User user) {
+	// 로그아웃하거나 게임 끝나면 돈 세팅
+	public boolean setFinalMoney(User user) {
 
 		int update = -1;
 		String sql = "UPDATE user_table SET money = ? WHERE id = ?";

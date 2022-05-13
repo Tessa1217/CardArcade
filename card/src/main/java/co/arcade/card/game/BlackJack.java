@@ -17,6 +17,7 @@ public class BlackJack implements GameRules {
 	// 첫번째 카드 배분
 	@Override
 	public Map<String, List<Card>> firstHand() {
+		cardStack = CardDeck.shuffleDeck();
 		Map<String, List<Card>> cardMap = new HashMap<String, List<Card>>();
 		List<Card> cards = new ArrayList<Card>();
 		for (int i = 0; i < 2; i++) {
@@ -155,18 +156,15 @@ public class BlackJack implements GameRules {
 			if (scores[1] == 21) {
 				System.out.println("딜러가 이겼습니다.");
 				return 3;
-			} else if (scores[1] < 21) {
-				System.out.println("유저가 이겼습니다.");
-				return 1;
+			} else if (scores[0] == scores[1]) {
+				System.out.println("PUSH");
+				return 2;
 			} else if (scores[0] < scores[1]) {
 				System.out.println("딜러가 이겼습니다.");
 				return 3;
 			} else if (scores[0] > scores[1]) {
 				System.out.println("유저가 이겼습니다.");
 				return 1;
-			} else if (scores[0] == scores[1]) {
-				System.out.println("PUSH");
-				return 2;
 			}
 		} else if (scores[1] > 21) {
 			System.out.println("딜러 버스트! 유저가 이겼습니다.");
@@ -183,11 +181,11 @@ public class BlackJack implements GameRules {
 		} else if (result == 2) {
 			return bet;
 		} else if (result == 3) {
-			bet *= -1.5;
+			bet *= -0.5;
 		} else if (result == 4) {
 			bet *= 2;
 		} else if (result == 5) {
-			bet *= -2;
+			bet *= -1;
 		}
 		return bet;
 	}

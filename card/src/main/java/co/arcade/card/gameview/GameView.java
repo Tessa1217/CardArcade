@@ -1,6 +1,5 @@
 package co.arcade.card.gameview;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import co.arcade.card.game.BlackJackGame;
@@ -13,7 +12,7 @@ import co.arcade.card.player.UserServiceImpl;
 public class GameView {
 
 	private static Scanner scn = new Scanner(System.in);
-	private static User user;
+	public static User user;
 	private static UserServiceImpl usi = new UserServiceImpl();
 	private static BlackJackGame bjs = new BlackJackGame();
 	private static OneCardGame ocg = new OneCardGame();
@@ -47,23 +46,17 @@ public class GameView {
 		System.out.println("1.블랙잭   2.원 카드  3.계정 수정   4.로그아웃   5.설명서");
 		System.out.println("-------  -------  ---------  --------  -------");
 		System.out.println("==============================================");
-		System.out.println("메뉴를 선택하세요 >>> ");
+		System.out.print("메뉴를 선택하세요 >>> ");
 		int menu = -1;
 		try {
 			menu = Integer.parseInt(scn.next());
-		} catch (InputMismatchException e) {
-			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			System.out.println("숫자를 입력해주세요");
 		}
 		if (menu == 1) {
-			int betMoney = bjs.execute(user);
-			if (betMoney != 0) {
-				user.setMoney(user.getMoney() + betMoney);
-			}
+			bjs.execute(user);
 		} else if (menu == 2) {
-			int betMoney = ocg.execute(user);
-			if (betMoney != 0) {
-				user.setMoney(user.getMoney() + betMoney);
-			}
+			ocg.execute(user);
 		} else if (menu == 3) {
 			int update = usi.update(currentUser);
 			if (update == 1) {
@@ -86,8 +79,8 @@ public class GameView {
 				int version = -1;
 				try {
 					version = Integer.parseInt(scn.next());
-				} catch (InputMismatchException e) {
-					e.printStackTrace();
+				} catch (NumberFormatException e) {
+					System.out.println("숫자를 입력해주세요");
 				}
 				if (version == 1) {
 					System.out.println(TranslateService.request("BlackJackmanual"));

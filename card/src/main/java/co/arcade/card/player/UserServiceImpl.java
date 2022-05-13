@@ -172,7 +172,7 @@ public class UserServiceImpl {
 
 	// 로그아웃
 	private User loggingOut(User user) {
-		boolean update = us.logOut(user);
+		boolean update = us.setFinalMoney(user);
 		if (update) {
 			user = new User();
 		} else if (update == false) {

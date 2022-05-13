@@ -10,9 +10,6 @@ public class Card {
 	private String cardPattern;
 	private String cardNo;
 
-	Card() {
-	}
-
 	static Card getCard(String cardPattern, int cardNo) {
 		Card card = new Card();
 		card.setCardPattern(cardPattern);
@@ -32,7 +29,15 @@ public class Card {
 
 	@Override
 	public String toString() {
-		return cardPattern + "[" + cardNo + "]";
+
+//		─ │ ┌ ┐ ┘ └
+
+		String card = "┌────┐";
+		card += "\n│    │";
+		card += "\n│" + String.format("%2s%2s", cardPattern, cardNo) + "│";
+		card += "\n│    │";
+		card += "\n└────┘";
+		return card; // cardPattern + "[" + cardNo + "]";
 	}
 
 }

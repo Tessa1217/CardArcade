@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import co.arcade.card.carddeck.Card;
+import co.arcade.card.gameview.GameView;
 import co.arcade.card.player.Dealer;
 import co.arcade.card.player.User;
 
@@ -19,7 +20,7 @@ public class BlackJackGame {
 	private static BlackJack bj = new BlackJack();
 
 	// 실행 메소드
-	public int execute(User currentUser) {
+	public void execute(User currentUser) {
 		user = currentUser;
 		int betMoney = 0;
 		while (true) {
@@ -35,21 +36,24 @@ public class BlackJackGame {
 			}
 
 			if (menu == 1) {
-				System.out.print("베팅 금액: ");
-				try {
-					betMoney = Integer.parseInt(scn.next());
-				} catch (NumberFormatException e) {
-					System.out.println("숫자를 입력해주세요.");
+				while (betMoney == 0) {
+					System.out.print("베팅 금액: ");
+					try {
+						betMoney = Integer.parseInt(scn.next());
+						betMoney = user.bet(user, betMoney);
+					} catch (NumberFormatException e) {
+						System.out.println("숫자를 입력해주세요.");
+					}
+					if (betMoney == 0) {
+						System.out.println("베팅을 하셔야 게임이 가능합니다.");
+					}
 				}
-
 				if (betMoney != 0) {
-					betMoney = user.bet(betMoney);
 					Map<String, List<Card>> cardMap = firstCards();
 					int firstResult = bj.firstRound(cardMap);
 					if (firstResult == 0) {
 						while (true) {
 							display(cardMap);
-
 							System.out.println("-----  --------");
 							System.out.println("1.Hit  2.Stand");
 							System.out.println("-----  --------");
@@ -67,31 +71,33 @@ public class BlackJackGame {
 								if (result != 0) {
 									finalDisplay(cardMap);
 									betMoney = bj.winning(result, betMoney);
-									System.out.println("최종 금액: " + betMoney);
-									return betMoney;
+									returnMoney(betMoney);
+									return;
 								}
 							} else if (choice == 2) {
 								finalDisplay(cardMap);
 								int result = bj.result(cardMap);
 								betMoney = bj.winning(result, betMoney);
-								System.out.println("최종 금액: " + betMoney);
-								return betMoney;
+								returnMoney(betMoney);
+								return;
 							} else {
 								System.out.println("메뉴를 다시 입력해주세요.");
 							}
 						}
 					} else if (firstResult != 0) {
+						finalDisplay(cardMap);
 						betMoney = bj.winning(firstResult, betMoney);
-						System.out.println("최종 금액: " + betMoney);
-						return betMoney;
+						returnMoney(betMoney);
+						return;
 					}
-				} else if (menu == 2) {
-					System.out.println("게임을 종료합니다.");
-					return 0;
-
-				} else {
-					System.out.println("메뉴를 다시 입력해주세요.");
 				}
+			}
+			if (menu == 2) {
+				System.out.println("게임을 종료합니다.");
+				return;
+
+			} else {
+				System.out.println("메뉴를 다시 입력해주세요.");
 			}
 		}
 
@@ -108,18 +114,23 @@ public class BlackJackGame {
 		int[] scores = bj.displaySum(cardMap);
 		user.showCard(cardMap.get("user"));
 		dealer.showBJCard(cardMap.get("dealer"));
-		System.out.println("---------------");
-		System.out.println("현재 유저 합계: " + scores[0]);
-		System.out.println("---------------");
+		System.out.println("  ---------------");
+		System.out.println("  현재 유저 합계: " + scores[0]);
+		System.out.println("  ---------------");
 	}
 
 	private void finalDisplay(Map<String, List<Card>> cardMap) {
 		int[] scores = bj.displaySum(cardMap);
 		user.showCard(cardMap.get("user"));
 		dealer.showCard(cardMap.get("dealer"));
-		System.out.println("--------------------------");
-		System.out.println("유저 합계: " + scores[0] + " vs. 딜러 합계: " + scores[1]);
-		System.out.println("--------------------------");
+		System.out.println("  --------------------------");
+		System.out.println("  유저 합계: " + scores[0] + " vs. 딜러 합계: " + scores[1]);
+		System.out.println("  --------------------------");
+	}
+
+	private void returnMoney(int betMoney) {
+		System.out.println("최종 금액: " + betMoney + "원");
+		GameView.user.setMoney(user.getMoney() + betMoney);
 	}
 
 }
