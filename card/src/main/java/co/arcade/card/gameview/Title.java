@@ -1,0 +1,18 @@
+package co.arcade.card.gameview;
+
+public class Title extends Thread {
+	String str = "♠   ♦   ♥   ♣  CARD GAME  ♠   ♦   ♥   ♣";
+
+	public void run() {
+		for (int i = 0; i < str.length(); i++) {
+			try {
+				System.out.print(str.charAt(i));
+				Thread.sleep(30);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println();
+	}
+
+}

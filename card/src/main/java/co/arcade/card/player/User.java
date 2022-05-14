@@ -38,7 +38,7 @@ public class User implements Player {
 			if (i > 0 && i % 7 == 0) {
 				System.out.println();
 			}
-			System.out.print(cards.get(i).toString() + " ");
+			System.out.print(cards.get(i).toString());
 		}
 		System.out.println();
 	}

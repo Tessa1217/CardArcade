@@ -56,6 +56,15 @@ public class BlackJack implements GameRules {
 		return card;
 	}
 
+	public Card draw(Map<String, List<Card>> cardMap) {
+		if (sumCard(cardMap)[1] > 17) {
+			return null;
+		} else if (sumCard(cardMap)[1] <= 16) {
+			return draw();
+		}
+		return null;
+	}
+
 	// 1.유저 승리, 2.푸쉬, 3.딜러 승리, 4.딜러 버스트, 5.유저 버스트
 
 	// 블랙잭 여부

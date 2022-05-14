@@ -25,9 +25,6 @@ public class CardDeck {
 		Collections.shuffle(cardDeck);
 		Stack<Card> cardStack = new Stack<Card>();
 		cardStack.addAll(cardDeck);
-//		for (int i = 0; i < cardDeck.size(); i++) {
-//			cardStack.push(cardDeck.get(i));
-//		}
 		return cardStack;
 	}
 
@@ -35,9 +32,6 @@ public class CardDeck {
 		Collections.shuffle(cardDeck);
 		Stack<Card> cardStack = new Stack<Card>();
 		cardStack.addAll(cardDeck);
-//		for (int i = 0; i < cardDeck.size(); i++) {
-//			cardStack.push(cardDeck.get(i));
-//		}
 		return cardStack;
 
 	}

@@ -29,15 +29,8 @@ public class Card {
 
 	@Override
 	public String toString() {
-
 //		─ │ ┌ ┐ ┘ └
-
-		String card = "┌────┐";
-		card += "\n│    │";
-		card += "\n│" + String.format("%2s%2s", cardPattern, cardNo) + "│";
-		card += "\n│    │";
-		card += "\n└────┘";
-		return card; // cardPattern + "[" + cardNo + "]";
+		return cardPattern + "[" + cardNo + "]";
 	}
 
 }

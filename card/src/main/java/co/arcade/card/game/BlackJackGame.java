@@ -64,9 +64,13 @@ public class BlackJackGame {
 								System.out.println("숫자를 입력해주세요.");
 							}
 							if (choice == 1) {
-								for (String mapkey : cardMap.keySet()) {
-									cardMap.get(mapkey).add(bj.draw());
+								cardMap.get("user").add(bj.draw());
+								if (bj.draw(cardMap) != null) {
+									cardMap.get("dealer").add(bj.draw(cardMap));
 								}
+//								for (String mapkey : cardMap.keySet()) {
+//									cardMap.get(mapkey).add(bj.draw());
+//								}
 								int result = bj.firstRound(cardMap);
 								if (result != 0) {
 									finalDisplay(cardMap);
@@ -75,6 +79,9 @@ public class BlackJackGame {
 									return;
 								}
 							} else if (choice == 2) {
+								if (bj.draw(cardMap) != null) {
+									cardMap.get("dealer").add(bj.draw(cardMap));
+								}
 								finalDisplay(cardMap);
 								int result = bj.result(cardMap);
 								betMoney = bj.winning(result, betMoney);
