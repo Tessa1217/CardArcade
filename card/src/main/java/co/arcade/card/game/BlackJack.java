@@ -60,9 +60,9 @@ public class BlackJack implements GameRules {
 
 	// 딜러 카드 한 장 추가 (16 이하이면 무조건 추가, 17 이상이면 무조건 스탠드)
 	public Card draw(Map<String, List<Card>> cardMap) {
-		if (sumCard(cardMap)[1] > 17) {
+		if (sumCard(cardMap.get("dealer")) > 17) {
 			return null;
-		} else if (sumCard(cardMap)[1] <= 16) {
+		} else if (sumCard(cardMap.get("dealer")) <= 16) {
 			return draw();
 		}
 		return null;
@@ -101,6 +101,29 @@ public class BlackJack implements GameRules {
 			result = 4;
 		}
 		return result;
+	}
+
+	private int sumCard(List<Card> dealerCard) {
+		int score = 0;
+		boolean containA = false;
+		for (int i = 0; i < dealerCard.size(); i++) {
+			if (dealerCard.get(i).getCardNo() == "J" || dealerCard.get(i).getCardNo() == "A") {
+				score += 11;
+				if (dealerCard.get(i).getCardNo() == "A") {
+					containA = true;
+				}
+			} else if (dealerCard.get(i).getCardNo() == "Q") {
+				score += 12;
+			} else if (dealerCard.get(i).getCardNo() == "K") {
+				score += 13;
+			} else {
+				score += Integer.parseInt(dealerCard.get(i).getCardNo());
+			}
+		}
+		if (score > 21 && containA) {
+			score -= 10;
+		}
+		return score;
 	}
 
 	// 카드의 합

@@ -65,7 +65,10 @@ public class BlackJackGame {
 							}
 							if (choice == 1) {
 								cardMap.get("user").add(bj.draw());
-								cardMap.get("dealer").add(bj.draw(cardMap));
+								Card card = bj.draw(cardMap);
+								if (card != null) {
+									cardMap.get("dealer").add(card);
+								}
 								int result = bj.firstRound(cardMap);
 								if (result != 0) {
 									finalResult(cardMap, betMoney, result);
@@ -118,6 +121,7 @@ public class BlackJackGame {
 	private void display(Map<String, List<Card>> cardMap) {
 		int[] scores = bj.displaySum(cardMap);
 		user.showCard(cardMap.get("user"));
+		user.showCard(cardMap.get("dealer"));
 		dealer.showBJCard(cardMap.get("dealer"));
 		System.out.println("\t\t\t┌───────────────┐");
 		System.out.println("\t\t\t│    USER: " + String.format("%2d", scores[0]) + "   │");
