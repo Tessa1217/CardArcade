@@ -19,7 +19,7 @@ public class SMS {
 		params.put("to", to);
 		params.put("from", from);
 		params.put("type", "SMS");
-		params.put("text", String.valueOf(randNum));
+		params.put("text", "인증코드는 " + String.valueOf(randNum) + "입니다.");
 		params.put("app_version", "test app 1.2");
 		try {
 			JSONObject obj = (JSONObject) coolsms.send(params);

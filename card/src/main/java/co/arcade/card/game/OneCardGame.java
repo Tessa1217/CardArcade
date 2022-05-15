@@ -35,9 +35,9 @@ public class OneCardGame {
 		user = currentUser;
 		int betMoney = 0;
 		while (true) {
-			System.out.println("---------------------");
-			System.out.println("1.Play Game | 2.Exit");
-			System.out.println("---------------------");
+			System.out.println("\t\t\t┌───────────┐ ┌──────┐");
+			System.out.println("\t\t\t│1.Play Game│ │2.Exit│");
+			System.out.println("\t\t\t└───────────┘ └──────┘");
 			System.out.print("메뉴: ");
 			int menu = -1;
 			try {
@@ -69,19 +69,19 @@ public class OneCardGame {
 								returnMoney(betMoney);
 								return;
 							} else if (cardMap.get("user").size() >= 15) {
-								System.out.println("유저가 파산했습니다.");
+								System.out.println("💰 유저가 파산했습니다.");
 								betMoney = oc.winning(cardMap.get("user").size(), betMoney);
 								returnMoney(betMoney);
 								return;
 							} else if (cardMap.get("dealer").size() >= 15) {
-								System.out.println("딜러가 파산했습니다.");
+								System.out.println("💰 딜러가 파산했습니다.");
 								betMoney = oc.winning(0, betMoney);
 								returnMoney(betMoney);
 								return;
 							}
-							System.out.println("------------ ----------");
-							System.out.println(" 1.카드 내기    2.카드 먹기");
-							System.out.println("------------ ----------");
+							System.out.println("\t\t\t┌──────────┐  ┌───────────┐");
+							System.out.println("\t\t\t│1.Put Card│  │2.Draw Card│");
+							System.out.println("\t\t\t└──────────┘  └───────────┘");
 							int choice = -1;
 							try {
 								choice = Integer.parseInt(scn.next());
@@ -92,7 +92,7 @@ public class OneCardGame {
 							if (empty) {
 								oc.reshuffle(empty);
 							}
-							System.out.println("게임 진행창: ");
+							System.out.println("\n게임 진행창: ");
 							if (choice == 1) {
 								int idx = -1;
 								do {
@@ -134,31 +134,31 @@ public class OneCardGame {
 							}
 							if (userChk != 0 && dealerChk != 0) {
 								if (userChk == 1 && dealerChk == 1 || dealerChk == 2) {
-									System.out.print("유저가 공격했습니다. ");
+									System.out.print("(∩ ͡° ͜ʖ ͡°)⊃━☆ﾟ. * ･ ｡ﾟ 유저가 공격했습니다. ");
 									attack.addAll(oc.attack(userChk));
-									System.out.print("딜러도 공격했습니다. \n");
+									System.out.print(" ━╤デ╦︻(▀̿̿Ĺ̯̿̿▀̿ ̿) 딜러도 공격했습니다. \n");
 									attack.addAll(oc.attack(dealerChk));
-									System.out.println("현재 공격 카드 " + attack.size() + " 쌓여 있습니다.");
+									System.out.println("현재 공격 카드 " + attack.size() + " 쌓여 있습니다.\n");
 									userChk = dealerChk = 0;
 								} else if (userChk == 2 && dealerChk == 2) {
-									System.out.print("유저가 공격했습니다. ");
+									System.out.print("(∩ ͡° ͜ʖ ͡°)⊃━☆ﾟ. * ･ ｡ﾟ 유저가 공격했습니다. ");
 									attack.addAll(oc.attack(userChk));
-									System.out.print("딜러도 공격했습니다. \n");
+									System.out.print(" ━╤デ╦︻(▀̿̿Ĺ̯̿̿▀̿ ̿)ﾟ 딜러도 공격했습니다. \n");
 									attack.addAll(oc.attack(dealerChk));
-									System.out.println("현재 공격 카드 " + attack.size() + " 쌓여 있습니다.");
+									System.out.println("현재 공격 카드 " + attack.size() + " 쌓여 있습니다.\n");
 									userChk = dealerChk = 0;
 								}
 							} else if (userChk == 0 && dealerChk != 0) {
-								System.out.print("딜러가 공격했습니다. \n");
+								System.out.print("(∩ ͡° ͜ʖ ͡°)⊃━☆ﾟ. * ･ ｡ﾟ 딜러가 공격했습니다. \n");
 								attack.addAll(oc.attack(dealerChk));
 								user.showCard(cardMap.get("user"));
 								int idx = -1;
 								do {
-									System.out.println("===============================");
-									System.out.println("  공격 방어할 카드가 있으면 선택해주세요.");
-									System.out.println("   ⚠ 없으면 아무 카드나 선택하세요.");
-									System.out.println("⚠ 가지고 있는 카드 수 밑으로 선택해주세요.");
-									System.out.println("===============================");
+									System.out.println("\t\t\t┌─────────────────────────────────┐");
+									System.out.println("\t\t\t   공격 방어할 카드가 있으면 선택해주세요.");
+									System.out.println("\t\t\t      ⚠ 없으면 아무 카드나 선택하세요.");
+									System.out.println("\t\t\t  ⚠ 가지고 있는 카드 수 밑으로 선택해주세요.");
+									System.out.println("\t\t\t└─────────────────────────────────┘");
 									try {
 										idx = Integer.parseInt(scn.next());
 									} catch (NumberFormatException e) {
@@ -184,22 +184,22 @@ public class OneCardGame {
 									}
 									if (dealerChk == 0) {
 										cardMap.get("dealer").addAll(attack);
+										System.out.println("딜러가 방어하지 못해 " + attack.size() + "장 먹었습니다.\n");
 										attack.clear();
-										System.out.println("딜러가 방어하지 못해 " + attack.size() + "장 먹었습니다.");
 										userChk = dealerChk = 0;
 									}
 								}
 							} else if (userChk != 0 && dealerChk == 0) {
-								System.out.print("유저가 공격했습니다. ");
+								System.out.print("(∩ ͡° ͜ʖ ͡°)⊃━☆ﾟ. * ･ ｡ﾟ 유저가 공격했습니다. ");
 								attack.addAll(oc.attack(userChk));
-								System.out.print("딜러가 " + attack.size() + "장 먹습니다.");
+								System.out.print("딜러가 " + attack.size() + "장 먹습니다.\n");
 								cardMap.get("dealer").addAll(attack);
 								userChk = 0;
 								attack.clear();
 							} else if (userChk == 0 && dealerChk == 0) {
 								cardMap.get("user").addAll(attack);
 								if (attack.size() > 0) {
-									System.out.println("유저가 방어하지 못해 " + attack.size() + "장 먹습니다.");
+									System.out.println("유저가 방어하지 못해 " + attack.size() + "장 먹습니다.\n");
 								}
 								attack.clear();
 							}

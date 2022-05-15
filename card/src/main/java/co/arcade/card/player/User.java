@@ -33,14 +33,15 @@ public class User implements Player {
 	// Show cards
 	@Override
 	public void showCard(List<Card> cards) {
-		System.out.println("유저 카드: ");
+		System.out.print("\t\t\t유저 카드: ");
 		for (int i = 0; i < cards.size(); i++) {
-			if (i > 0 && i % 7 == 0) {
+			if (i > 0 && i % 4 == 0) {
 				System.out.println();
+				System.out.print("\t\t\t\t");
 			}
-			System.out.print(cards.get(i).toString());
+			System.out.print((i + 1) + ":" + cards.get(i).toString() + " ");
 		}
-		System.out.println();
+		System.out.println("\n");
 	}
 
 }

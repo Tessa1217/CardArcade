@@ -4,11 +4,14 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import co.arcade.card.mail.SMS;
+
 public class UserServiceImpl {
 
 	private static Scanner scn = new Scanner(System.in);
 	private static User user;
 	private static UserService us = new UserService();
+	private static Matcher matcher;
 
 	public User accountExecute() {
 		while (true) {
@@ -121,6 +124,14 @@ public class UserServiceImpl {
 			}
 		} while (user.getEmail() == null);
 
+		do {
+			System.out.println("♠ 연락처: ");
+			String contact = scn.next();
+			if (isValidContact(contact)) {
+				user.setContact(contact);
+			}
+		} while (user.getContact() == null);
+
 		user.setId(id);
 		user.setPwd(pwd);
 		return user;
@@ -137,11 +148,20 @@ public class UserServiceImpl {
 		return check;
 	}
 
+	private boolean isValidContact(String contact) {
+		boolean check = false;
+		String REGEX = "^01(?:0|1|[6-9])[.-]?(\\d{4})[.-]?(\\d{4})$";
+		matcher = Pattern.compile(REGEX).matcher(contact);
+		if (matcher.find()) {
+			return true;
+		}
+		return check;
+	}
+
 	// 8자~20자 특수문자, 영대소문자, 숫자 포함하는 비밀번호
 	private boolean isValidPassword(String pwd) {
 		boolean check = false;
 		String REGEX = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z[0-9]$@$!%*#?&]{8,20}$";
-		Matcher matcher;
 		matcher = Pattern.compile(REGEX).matcher(pwd);
 		if (matcher.find()) {
 			return true;
@@ -214,18 +234,21 @@ public class UserServiceImpl {
 		System.out.println("------------------");
 		System.out.print("아이디 >> ");
 		user.setId(scn.next());
-		System.out.print("가입 시 인증된 이메일 >> ");
-		user.setEmail(scn.next());
+		System.out.print("연락처 >> ");
+		user.setContact(scn.next());
 		user = us.findPwd(user);
-		String pwd = user.getPwd();
-		password(pwd);
-	}
-
-	// 찾은 비밀번호 출력
-	private void password(String pwd) {
-		if (pwd != null) {
-			System.out.println("계정 비밀번호는 '" + pwd + "' 입니다.");
-		} else if (pwd == null) {
+		if (user.getPwd() != null) {
+			System.out.println("등록된 연락처로 인증 코드를 보냈습니다.");
+			SMS sms = new SMS();
+			int randNum = sms.sendMessage(user.getPwd());
+			System.out.print("인증코드를 입력해주세요: ");
+			int num = Integer.parseInt(scn.next());
+			if (randNum == num) {
+				System.out.println("비밀번호는 '" + user.getPwd() + "' 입니다.");
+			} else {
+				System.out.println("⚠ 인증코드가 틀렸습니다. 다시 진행해주세요.");
+			}
+		} else {
 			System.out.println("⚠ 해당 아이디에 대한 비밀번호를 찾을 수 없습니다.");
 		}
 	}

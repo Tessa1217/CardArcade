@@ -18,6 +18,7 @@ public class OneCard implements GameRules {
 	// 첫 카드 배분 (원 카드 7장)
 	@Override
 	public Map<String, List<Card>> firstHand() {
+		GameRules.t.run();
 		cardStack = CardDeck.shuffleDeck();
 		Map<String, List<Card>> cardMap = new HashMap<String, List<Card>>();
 		List<Card> cards;
@@ -40,10 +41,14 @@ public class OneCard implements GameRules {
 		return card;
 	}
 
-	// 탑 카드 출력
+	// 탑 카드 출력 ─ │ ┌ ┐ ┘ └
 	public void openTopCard() {
-		System.out.print("  TOP CARD \n");
-		System.out.println(topCard.toString());
+		System.out.println("\t\t\t\t\t┌────┐");
+		System.out.println("\t\t\t\t\t│    │");
+		System.out
+				.println("\t\t\t\t\t│" + String.format("%2s%2s", topCard.getCardPattern(), topCard.getCardNo()) + "│");
+		System.out.println("\t\t\t\t\t│    │");
+		System.out.println("\t\t\t\t\t└────┘");
 	}
 
 	// 덱 비어있는지 확인
@@ -57,6 +62,8 @@ public class OneCard implements GameRules {
 	// 게임 카드 덱이 빌 경우 내려놓은 카드 덱을 재셔플
 	public Stack<Card> reshuffle(boolean empty) {
 		if (empty) {
+			System.out.print("카드 덱이 비었습니다. ");
+			GameRules.t.run();
 			cardStack = CardDeck.shuffleDeck(discardStack);
 			topCard = firstOpenCard();
 		}
@@ -92,7 +99,12 @@ public class OneCard implements GameRules {
 	// 공격 카드
 	public List<Card> attack(int num) {
 		List<Card> attackCard = new ArrayList<Card>();
-		cardStack = reshuffle(cardStackEmpty());
+		if (cardStack.size() <= 3) {
+			for (int i = 0; i < 3; i++) {
+				discardStack.add(cardStack.pop());
+			}
+			cardStack = reshuffle(cardStackEmpty());
+		}
 		if (num == 2) {
 			for (int i = 0; i < 3; i++) {
 				attackCard.add(cardStack.pop());

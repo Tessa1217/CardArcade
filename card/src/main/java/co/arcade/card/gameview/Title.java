@@ -1,7 +1,7 @@
 package co.arcade.card.gameview;
 
-public class Title extends Thread {
-	String str = "♠   ♦   ♥   ♣  CARD GAME  ♠   ♦   ♥   ♣";
+public class Title implements Runnable {
+	String str = "    ♠   ♦   ♥   ♣  CARD GAME  ♠   ♦   ♥   ♣";
 
 	public void run() {
 		for (int i = 0; i < str.length(); i++) {

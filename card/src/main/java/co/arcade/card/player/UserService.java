@@ -18,13 +18,14 @@ public class UserService {
 	public int signUp(User user) {
 
 		int insert = -1;
-		String sql = "INSERT INTO user_table VALUES (?, ?, default, ?)";
+		String sql = "INSERT INTO USER_TABLE VALUES (?, ?, DEFAULT, ?, ?)";
 		try {
 			conn = ds.getConnection();
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, user.getId());
 			psmt.setString(2, user.getPwd());
 			psmt.setString(3, user.getEmail());
+			psmt.setString(4, user.getContact());
 			insert = psmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -57,7 +58,7 @@ public class UserService {
 	// 로그인
 	public User logIn(User user) {
 		User player = new User();
-		String sql = "SELECT * FROM user_table WHERE id = ? AND pwd = ?";
+		String sql = "SELECT * FROM USER_TABLE WHERE ID = ? AND PWD = ?";
 		try {
 			conn = ds.getConnection();
 			psmt = conn.prepareStatement(sql);
@@ -81,7 +82,7 @@ public class UserService {
 	public boolean setFinalMoney(User user) {
 
 		int update = -1;
-		String sql = "UPDATE user_table SET money = ? WHERE id = ?";
+		String sql = "UPDATE USER_TABLE SET MONEY = ? WHERE ID = ?";
 
 		try {
 			conn = ds.getConnection();
@@ -103,7 +104,7 @@ public class UserService {
 	// 비밀번호 변경
 	public int updateAccount(User user, String pwd) {
 		int update = -1;
-		String sql = "UPDATE user_table SET pwd = ? WHERE id = ? AND pwd = ?";
+		String sql = "UPDATE USER_TABLE SET PWD = ? WHERE ID = ? AND PWD = ?";
 
 		try {
 			conn = ds.getConnection();
@@ -122,12 +123,12 @@ public class UserService {
 
 	// 비밀번호 찾기
 	public User findPwd(User user) {
-		String sql = "SELECT PWD FROM USER_TABLE WHERE ID = ? AND EMAIL = ?";
+		String sql = "SELECT PWD FROM USER_TABLE WHERE ID = ? AND CONTACT = ?";
 		try {
 			conn = ds.getConnection();
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, user.getId());
-			psmt.setString(2, user.getEmail());
+			psmt.setString(2, user.getContact());
 			rs = psmt.executeQuery();
 			if (rs.next()) {
 				user.setPwd(rs.getString("pwd"));

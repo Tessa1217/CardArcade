@@ -12,11 +12,12 @@ import co.arcade.card.carddeck.CardDeck;
 public class BlackJack implements GameRules {
 
 	// 한 회차동안 사용할 카드 덱
-	public static Stack<Card> cardStack = CardDeck.shuffleDeck();
+	public static Stack<Card> cardStack;
 
 	// 첫번째 카드 배분
 	@Override
 	public Map<String, List<Card>> firstHand() {
+		GameRules.t.run();
 		cardStack = CardDeck.shuffleDeck();
 		Map<String, List<Card>> cardMap = new HashMap<String, List<Card>>();
 		List<Card> cards = new ArrayList<Card>();
@@ -31,6 +32,7 @@ public class BlackJack implements GameRules {
 		return cardMap;
 	}
 
+	// 첫 판에 블랙잭, 버스트 여부 확인
 	public int firstRound(Map<String, List<Card>> cardMap) {
 		int natural = blackJack(cardMap);
 		if (natural != 0) {
@@ -56,6 +58,7 @@ public class BlackJack implements GameRules {
 		return card;
 	}
 
+	// 딜러 카드 한 장 추가 (16 이하이면 무조건 추가, 17 이상이면 무조건 스탠드)
 	public Card draw(Map<String, List<Card>> cardMap) {
 		if (sumCard(cardMap)[1] > 17) {
 			return null;
@@ -65,21 +68,19 @@ public class BlackJack implements GameRules {
 		return null;
 	}
 
-	// 1.유저 승리, 2.푸쉬, 3.딜러 승리, 4.딜러 버스트, 5.유저 버스트
-
 	// 블랙잭 여부
 	private int blackJack(Map<String, List<Card>> cardMap) {
 		int[] natural = new int[2];
 		natural = sumCard(cardMap);
 		int result = 0;
 		if (natural[0] == 21 && natural[1] == 21) {
-			System.out.println("플레이어, 딜러 둘 다 블랙잭입니다.");
+			System.out.println("플레이어, 딜러 둘 다 블랙잭입니다. 푸쉬입니다.");
 			result = 2;
 		} else if (natural[0] == 21) {
-			System.out.println("플레이어가 블랙잭입니다.");
+			System.out.println("유저 블랙잭입니다!");
 			result = 1;
 		} else if (natural[1] == 21) {
-			System.out.println("딜러가 블랙잭입니다.");
+			System.out.println("딜러 블랙잭입니다!");
 			result = 3;
 		}
 		return result;
@@ -136,6 +137,7 @@ public class BlackJack implements GameRules {
 		return scores;
 	}
 
+	// 딜러, 유저의 합 출력
 	public int[] displaySum(Map<String, List<Card>> cardMap) {
 		int[] scores = new int[2];
 		scores = sumCard(cardMap);
@@ -148,36 +150,34 @@ public class BlackJack implements GameRules {
 		int[] scores = sumCard(cardMap);
 		int result = 0;
 		if (scores[0] > 21 && scores[1] > 21) {
-			System.out.println("유저, 딜러 버스트! 딜러가 이겼습니다.");
+			System.out.println("딜러, 유저 버스트! 딜러가 이겼습니다.");
 			return 5;
-		} else if (scores[0] == 21) {
-			if (scores[1] == 21) {
-				System.out.println("PUSH");
-				return 2;
-			} else if (scores[1] < 21) {
-				System.out.println("유저가 이겼습니다.");
-				return 1;
-			}
 		} else if (scores[0] > 21) {
 			System.out.println("유저 버스트! 딜러가 이겼습니다.");
 			return 5;
-		} else if (scores[0] < 21) {
-			if (scores[1] == 21) {
-				System.out.println("딜러가 이겼습니다.");
-				return 3;
-			} else if (scores[0] == scores[1]) {
-				System.out.println("PUSH");
-				return 2;
-			} else if (scores[0] < scores[1]) {
-				System.out.println("딜러가 이겼습니다.");
-				return 3;
-			} else if (scores[0] > scores[1]) {
-				System.out.println("유저가 이겼습니다.");
-				return 1;
-			}
 		} else if (scores[1] > 21) {
 			System.out.println("딜러 버스트! 유저가 이겼습니다.");
 			return 4;
+		} else if (scores[0] == 1 && scores[1] == 1) {
+			System.out.println("딜러, 유저의 합이 21입니다. 푸쉬입니다.");
+			return 2;
+		} else if (scores[0] == 1) {
+			System.out.println("유저의 합이 21입니다. 유저가 이겼습니다.");
+			return 1;
+		} else if (scores[1] == 1) {
+			System.out.println("딜러의 합이 21입니다. 딜러가 이겼습니다.");
+			return 3;
+		} else if (scores[0] < 21 && scores[1] < 21) {
+			if (scores[0] == scores[1]) {
+				System.out.println("딜러, 유저 합이 같습니다. 푸쉬입니다.");
+				return 2;
+			} else if (scores[0] > scores[1]) {
+				System.out.println("유저가 이겼습니다.");
+				return 1;
+			} else if (scores[0] < scores[1]) {
+				System.out.println("딜러가 이겼습니다.");
+				return 3;
+			}
 		}
 		return result;
 	}

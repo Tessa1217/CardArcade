@@ -24,9 +24,9 @@ public class BlackJackGame {
 		user = currentUser;
 		int betMoney = 0;
 		while (true) {
-			System.out.println("-------------  --------");
-			System.out.println(" 1.Play Game    2.Exit");
-			System.out.println("-------------  --------");
+			System.out.println("\t\t\t┌───────────┐  ┌──────┐");
+			System.out.println("\t\t\t│1.Play Game│  │2.Exit│");
+			System.out.println("\t\t\t└───────────┘  └──────┘");
 			System.out.print("메뉴를 선택해주세요: ");
 			int menu = -1;
 			try {
@@ -54,9 +54,9 @@ public class BlackJackGame {
 					if (firstResult == 0) {
 						while (true) {
 							display(cardMap);
-							System.out.println("-----  --------");
-							System.out.println("1.Hit  2.Stand");
-							System.out.println("-----  --------");
+							System.out.println("\t\t\t┌─────┐  ┌───────┐");
+							System.out.println("\t\t\t│1.Hit│  │2.Stand│");
+							System.out.println("\t\t\t└─────┘  └───────┘");
 							int choice = -1;
 							try {
 								choice = Integer.parseInt(scn.next());
@@ -65,36 +65,26 @@ public class BlackJackGame {
 							}
 							if (choice == 1) {
 								cardMap.get("user").add(bj.draw());
-								if (bj.draw(cardMap) != null) {
-									cardMap.get("dealer").add(bj.draw(cardMap));
-								}
-//								for (String mapkey : cardMap.keySet()) {
-//									cardMap.get(mapkey).add(bj.draw());
-//								}
+								cardMap.get("dealer").add(bj.draw(cardMap));
 								int result = bj.firstRound(cardMap);
 								if (result != 0) {
-									finalDisplay(cardMap);
-									betMoney = bj.winning(result, betMoney);
-									returnMoney(betMoney);
+									finalResult(cardMap, betMoney, result);
 									return;
 								}
 							} else if (choice == 2) {
 								if (bj.draw(cardMap) != null) {
 									cardMap.get("dealer").add(bj.draw(cardMap));
 								}
-								finalDisplay(cardMap);
 								int result = bj.result(cardMap);
-								betMoney = bj.winning(result, betMoney);
-								returnMoney(betMoney);
+								finalResult(cardMap, betMoney, result);
 								return;
 							} else {
 								System.out.println("메뉴를 다시 입력해주세요.");
 							}
 						}
 					} else if (firstResult != 0) {
-						finalDisplay(cardMap);
-						betMoney = bj.winning(firstResult, betMoney);
-						returnMoney(betMoney);
+						int result = firstResult;
+						finalResult(cardMap, betMoney, result);
 						return;
 					}
 				}
@@ -116,27 +106,37 @@ public class BlackJackGame {
 		return cardMap;
 	}
 
+	// 최종 합 + 카드 출력 메소드
+	private void finalResult(Map<String, List<Card>> cardMap, int betMoney, int result) {
+		System.out.println("\t\t\t▶ 게임 결과: ");
+		finalDisplay(cardMap);
+		betMoney = bj.winning(result, betMoney);
+		returnMoney(betMoney);
+	}
+
 	// 카드 출력
 	private void display(Map<String, List<Card>> cardMap) {
 		int[] scores = bj.displaySum(cardMap);
 		user.showCard(cardMap.get("user"));
 		dealer.showBJCard(cardMap.get("dealer"));
-		System.out.println("  ---------------");
-		System.out.println("  현재 유저 합계: " + scores[0]);
-		System.out.println("  ---------------");
+		System.out.println("\t\t\t┌───────────────┐");
+		System.out.println("\t\t\t│    USER: " + String.format("%2d", scores[0]) + "   │");
+		System.out.println("\t\t\t└───────────────┘");
 	}
 
+	// ─ │ ┌ ┐ ┘ └
 	private void finalDisplay(Map<String, List<Card>> cardMap) {
 		int[] scores = bj.displaySum(cardMap);
 		user.showCard(cardMap.get("user"));
 		dealer.showCard(cardMap.get("dealer"));
-		System.out.println("  --------------------------");
-		System.out.println("  유저 합계: " + scores[0] + " vs. 딜러 합계: " + scores[1]);
-		System.out.println("  --------------------------");
+		System.out.println("\t\t\t┌────────────────────────────┐");
+		System.out.print("\t\t\t│    USER:" + String.format("%2d", scores[0]) + " vs. DEALER:"
+				+ String.format("%2d", scores[1]) + "   │\n");
+		System.out.println("\t\t\t└────────────────────────────┘");
 	}
 
 	private void returnMoney(int betMoney) {
-		System.out.println("최종 금액: " + betMoney + "원");
+		System.out.println("\t\t\t최종 금액: " + betMoney + "원\n");
 		GameView.user.setMoney(user.getMoney() + betMoney);
 	}
 

@@ -3,6 +3,7 @@ package co.arcade.card.gameview;
 import java.util.Scanner;
 
 import co.arcade.card.game.BlackJackGame;
+import co.arcade.card.game.GameRules;
 import co.arcade.card.game.OneCardGame;
 import co.arcade.card.manual.Manual;
 import co.arcade.card.manual.TranslateService;
@@ -39,10 +40,9 @@ public class GameView {
 	private boolean mainTitle(User currentUser) {
 		boolean run = true;
 		user = currentUser;
-		Title title = new Title();
 		System.out.println(currentUser.getId() + "님의 현재 잔고: " + currentUser.getMoney() + "원");
 		System.out.println("==============================================");
-		title.run();
+		GameRules.t2.run();
 		System.out.println("-------  -------  ---------  --------  -------");
 		System.out.println("1.블랙잭   2.원 카드  3.계정 수정   4.로그아웃   5.설명서");
 		System.out.println("-------  -------  ---------  --------  -------");
