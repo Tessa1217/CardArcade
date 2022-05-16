@@ -8,6 +8,7 @@ import co.arcade.card.carddeck.Card;
 import co.arcade.card.gameview.GameView;
 import co.arcade.card.player.Dealer;
 import co.arcade.card.player.User;
+import co.arcade.card.player.UserService;
 
 public class BlackJackGame {
 
@@ -22,11 +23,12 @@ public class BlackJackGame {
 	// 실행 메소드
 	public void execute(User currentUser) {
 		user = currentUser;
-		int betMoney = 0;
-		while (true) {
-			System.out.println("\t\t\t┌───────────┐  ┌──────┐");
-			System.out.println("\t\t\t│1.Play Game│  │2.Exit│");
-			System.out.println("\t\t\t└───────────┘  └──────┘");
+		boolean run = true;
+		while (run) {
+			int betMoney = 0;
+			System.out.println("\t\t\t\t┌───────────┐  ┌──────┐");
+			System.out.println("\t\t\t\t│1.Play Game│  │2.Exit│");
+			System.out.println("\t\t\t\t└───────────┘  └──────┘");
 			System.out.print("메뉴를 선택해주세요: ");
 			int menu = -1;
 			try {
@@ -34,7 +36,10 @@ public class BlackJackGame {
 			} catch (NumberFormatException e) {
 				System.out.println("숫자를 입력해주세요.");
 			}
-
+			if (GameView.user.getMoney() <= 0) {
+				System.out.println("현재 잔액이 " + user.getMoney() + "원입니다.");
+				break;
+			}
 			if (menu == 1) {
 				while (betMoney == 0) {
 					System.out.print("베팅 금액: ");
@@ -72,7 +77,7 @@ public class BlackJackGame {
 								int result = bj.firstRound(cardMap);
 								if (result != 0) {
 									finalResult(cardMap, betMoney, result);
-									return;
+									break;
 								}
 							} else if (choice == 2) {
 								if (bj.draw(cardMap) != null) {
@@ -80,7 +85,7 @@ public class BlackJackGame {
 								}
 								int result = bj.result(cardMap);
 								finalResult(cardMap, betMoney, result);
-								return;
+								break;
 							} else {
 								System.out.println("메뉴를 다시 입력해주세요.");
 							}
@@ -88,14 +93,12 @@ public class BlackJackGame {
 					} else if (firstResult != 0) {
 						int result = firstResult;
 						finalResult(cardMap, betMoney, result);
-						return;
 					}
 				}
 			}
 			if (menu == 2) {
 				System.out.println("게임을 종료합니다.");
-				return;
-
+				break;
 			} else {
 				System.out.println("메뉴를 다시 입력해주세요.");
 			}
@@ -121,7 +124,6 @@ public class BlackJackGame {
 	private void display(Map<String, List<Card>> cardMap) {
 		int[] scores = bj.displaySum(cardMap);
 		user.showCard(cardMap.get("user"));
-		user.showCard(cardMap.get("dealer"));
 		dealer.showBJCard(cardMap.get("dealer"));
 		System.out.println("\t\t\t┌───────────────┐");
 		System.out.println("\t\t\t│    USER: " + String.format("%2d", scores[0]) + "   │");
@@ -142,6 +144,8 @@ public class BlackJackGame {
 	private void returnMoney(int betMoney) {
 		System.out.println("\t\t\t최종 금액: " + betMoney + "원\n");
 		GameView.user.setMoney(user.getMoney() + betMoney);
+		UserService.setFinalMoney(GameView.user);
+
 	}
 
 }

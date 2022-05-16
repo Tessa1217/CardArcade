@@ -15,13 +15,13 @@ public class UserServiceImpl {
 
 	public User accountExecute() {
 		while (true) {
-			System.out.println("======================================");
-			System.out.println(" ♠ ♦ ♥ ♣ ♠ ♦ CARD ARCADE ♠ ♦ ♥ ♣ ♠ ♦ ♠");
-			System.out.println(" --------  ------- ------------ -----");
-			System.out.println(" 1.회원가입   2.로그인  3.비밀번호 찾기  4.종료");
-			System.out.println(" --------  ------- ------------ -----");
-			System.out.println(" ♦ ♥ ♣ ♠ ♦ ♥ ♣ ♠ ♦ ♥ ♣ ♠ ♦ ♥ ♣ ♠ ♦ ♥ ♠");
-			System.out.println("======================================\n");
+			System.out.println("\t\t┌─────────────────────────────────────────────────┐");
+			System.out.println("\t\t       ♠ ♦ ♥ ♣ ♠ ♦ CARD ARCADE ♠ ♦ ♥ ♣ ♠ ♦ ♠");
+			System.out.println("\t\t ┌──────────┐ ┌────────┐ ┌───────────┐┌────────┐");
+			System.out.println("\t\t │1.회원가입하기│ │ 2.로그인 │ │3.비밀번호 찾기││ 4.나가기 │");
+			System.out.println("\t\t └──────────┘ └────────┘ └───────────┘└────────┘");
+			System.out.println("\t\t       ♦ ♥ ♣ ♠ ♦ ♥ ♣ ♠ ♦ ♥ ♣ ♠ ♦ ♥ ♣ ♠ ♦ ♥ ♠");
+			System.out.println("\t\t└─────────────────────────────────────────────────┘\n");
 			System.out.print("♠ 메뉴를 선택하세요: ");
 			int menu = -1;
 			try {
@@ -48,7 +48,8 @@ public class UserServiceImpl {
 					currentUser = us.logIn(user);
 					cnt++;
 					if (currentUser.getId() != null) {
-						break;
+						return currentUser;
+
 					}
 					System.out.println("⚠ 계정 정보가 틀립니다. 다시 로그인을 시도해주세요.");
 				} while (cnt < 3 && currentUser.getId() == null);
@@ -91,22 +92,22 @@ public class UserServiceImpl {
 			idCheck = isSameId(id);
 		} while (idCheck);
 
-		System.out.println("\n=================================");
-		System.out.println("           *패스워드 규칙*");
-		System.out.println("  패스워드는 8자에서 20자 사이, 특수문자,");
-		System.out.println("영문 대소문자, 숫자 조합으로 구성해야 합니다.");
-		System.out.println("=================================");
+		System.out.println("\n\t\t\t┌────────────────────────────────────┐");
+		System.out.println("\t\t\t              ⚠️ 패스워드 규칙 ⚠️            ");
+		System.out.println("\t\t\t       패스워드는 8자에서 20자 사이, 특수문자,");
+		System.out.println("\t\t\t     영문 대소문자, 숫자 조합으로 구성해야 합니다.");
+		System.out.println("\t\t\t└────────────────────────────────────┘\n");
 		while (isValidPassword(pwd) == false) {
-			System.out.print("생성할 비밀번호: ");
+			System.out.print("♠ 생성할 비밀번호: ");
 			pwd = scn.next();
 			if (isValidPassword(pwd)) {
 				while (pwd.equals(pwdChk) == false) {
-					System.out.print("패스워드 확인 >>> ");
+					System.out.print("♠ 패스워드 확인: ");
 					pwdChk = scn.next();
 					if (pwd.equals(pwdChk)) {
 						System.out.println("\n");
 					} else if (pwd.equals(pwdChk) == false) {
-						System.out.println("비밀번호가 일치하지 않습니다.");
+						System.out.println("⚠️ 비밀번호가 일치하지 않습니다.");
 					}
 				}
 			} else if (isValidPassword(pwd) == false) {
@@ -129,7 +130,9 @@ public class UserServiceImpl {
 			String contact = scn.next();
 			if (isValidContact(contact)) {
 				user.setContact(contact);
+				break;
 			}
+			System.out.println("⚠ 올바른 연락처 규격을 입력해주세요.");
 		} while (user.getContact() == null);
 
 		user.setId(id);
@@ -150,7 +153,7 @@ public class UserServiceImpl {
 
 	private boolean isValidContact(String contact) {
 		boolean check = false;
-		String REGEX = "^01(?:0|1|[6-9])[.-]?(\\d{4})[.-]?(\\d{4})$";
+		String REGEX = "^01(?:0|1|[6-9])-(\\d{4})-(\\d{4})$";
 		matcher = Pattern.compile(REGEX).matcher(contact);
 		if (matcher.find()) {
 			return true;
@@ -192,7 +195,7 @@ public class UserServiceImpl {
 
 	// 로그아웃
 	private User loggingOut(User user) {
-		boolean update = us.setFinalMoney(user);
+		boolean update = UserService.setFinalMoney(user);
 		if (update) {
 			user = new User();
 		} else if (update == false) {
@@ -229,19 +232,18 @@ public class UserServiceImpl {
 	// 비밀번호 찾기 (아이디와 가입 시 인증된 이메일 맞으면 확인 가능)
 	private void findPassword(User user) {
 		user = new User();
-		System.out.println("------------------");
-		System.out.println("   ♠ 비밀번호 찾기");
-		System.out.println("------------------");
-		System.out.print("아이디 >> ");
+		System.out.println("\t\t\t\t┌───────────────┐");
+		System.out.println("\t\t\t\t  ♠ 비밀번호 찾기");
+		System.out.println("\t\t\t\t└───────────────┘");
+		System.out.print("♠ 아이디: ");
 		user.setId(scn.next());
-		System.out.print("연락처 >> ");
+		System.out.print("♠ 연락처: ");
 		user.setContact(scn.next());
 		user = us.findPwd(user);
 		if (user.getPwd() != null) {
 			System.out.println("등록된 연락처로 인증 코드를 보냈습니다.");
-			SMS sms = new SMS();
-			int randNum = sms.sendMessage(user.getPwd());
-			System.out.print("인증코드를 입력해주세요: ");
+			int randNum = SMS.sendMessage(user.getContact());
+			System.out.print("♠ 인증코드를 입력해주세요: ");
 			int num = Integer.parseInt(scn.next());
 			if (randNum == num) {
 				System.out.println("비밀번호는 '" + user.getPwd() + "' 입니다.");
@@ -250,6 +252,16 @@ public class UserServiceImpl {
 			}
 		} else {
 			System.out.println("⚠ 해당 아이디에 대한 비밀번호를 찾을 수 없습니다.");
+		}
+	}
+
+	public void deleteUser(User user) {
+		if (user.getMoney() <= 0) {
+			System.out.println("현재 잔액이 " + user.getMoney() + " 원으로 더는 게임을 진행할 수 없습니다.");
+			int delete = us.deleteUser(user);
+			if (delete == 1) {
+				System.out.println("자동 탈퇴되었습니다.");
+			}
 		}
 	}
 

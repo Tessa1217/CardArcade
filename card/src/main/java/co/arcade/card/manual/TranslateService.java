@@ -54,7 +54,6 @@ public class TranslateService {
 				ops.flush();
 			}
 			int responseCode = con.getResponseCode();
-			System.out.println(responseCode);
 			if (responseCode == HttpURLConnection.HTTP_OK) {
 				isr = new InputStreamReader(con.getInputStream());
 				br = new BufferedReader(isr);

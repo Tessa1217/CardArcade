@@ -79,7 +79,7 @@ public class UserService {
 	}
 
 	// 로그아웃하거나 게임 끝나면 돈 세팅
-	public boolean setFinalMoney(User user) {
+	public static boolean setFinalMoney(User user) {
 
 		int update = -1;
 		String sql = "UPDATE USER_TABLE SET MONEY = ? WHERE ID = ?";
@@ -93,7 +93,21 @@ public class UserService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			closeConnection();
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+
+				if (psmt != null) {
+					psmt.close();
+				}
+
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		if (update == 1) {
 			return true;
@@ -123,7 +137,7 @@ public class UserService {
 
 	// 비밀번호 찾기
 	public User findPwd(User user) {
-		String sql = "SELECT PWD FROM USER_TABLE WHERE ID = ? AND CONTACT = ?";
+		String sql = "SELECT PWD, CONTACT FROM USER_TABLE WHERE ID = ? AND CONTACT = ?";
 		try {
 			conn = ds.getConnection();
 			psmt = conn.prepareStatement(sql);
@@ -132,6 +146,7 @@ public class UserService {
 			rs = psmt.executeQuery();
 			if (rs.next()) {
 				user.setPwd(rs.getString("pwd"));
+				user.setContact(rs.getString("contact"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -139,6 +154,22 @@ public class UserService {
 			closeConnection();
 		}
 		return user;
+	}
+
+	public int deleteUser(User user) {
+		int delete = -1;
+		String sql = "DELETE FROM USER_TABLE WHERE MONEY <= 0 AND ID = ?";
+		try {
+			conn = ds.getConnection();
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, user.getId());
+			delete = psmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection();
+		}
+		return delete;
 	}
 
 	// DB Connection 끊기

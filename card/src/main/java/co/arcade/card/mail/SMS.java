@@ -8,10 +8,10 @@ import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 public class SMS {
-	private static final String api_key = "apikey";
-	private static final String api_secret = "apisecret";
+	private static final String api_key = "NCSO40JKDPS6VAFR";
+	private static final String api_secret = "YPQE8QCZJNKCBSGRDYKZRTG8DDUXT9OU";
 	private static Message coolsms = new Message(api_key, api_secret);
-	private static final String from = "phone";
+	private static final String from = "010-3823-3874";
 
 	public static int sendMessage(String to) {
 		HashMap<String, String> params = new HashMap<String, String>();

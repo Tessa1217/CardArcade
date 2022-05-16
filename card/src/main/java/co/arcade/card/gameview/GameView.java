@@ -7,6 +7,7 @@ import co.arcade.card.game.GameRules;
 import co.arcade.card.game.OneCardGame;
 import co.arcade.card.manual.Manual;
 import co.arcade.card.manual.TranslateService;
+import co.arcade.card.player.RankServiceImpl;
 import co.arcade.card.player.User;
 import co.arcade.card.player.UserServiceImpl;
 
@@ -23,6 +24,7 @@ public class GameView {
 			user = usi.accountExecute();
 			if (user != null) {
 				while (true) {
+					System.out.println("환영합니다, " + user.getId() + "님!");
 					boolean run = mainTitle(user);
 					if (run == false) {
 						user = new User();
@@ -41,12 +43,17 @@ public class GameView {
 		boolean run = true;
 		user = currentUser;
 		System.out.println(currentUser.getId() + "님의 현재 잔고: " + currentUser.getMoney() + "원");
-		System.out.println("==============================================");
+		if (currentUser.getMoney() <= 0) {
+			System.out.println("파산하셨습니다!");
+			usi.deleteUser(currentUser);
+			return false;
+		}
+		System.out.println("┌───────────────────────────────────────────────────────────────────────────────────┐");
 		GameRules.t2.run();
-		System.out.println("-------  -------  ---------  --------  -------");
-		System.out.println("1.블랙잭   2.원 카드  3.계정 수정   4.로그아웃   5.설명서");
-		System.out.println("-------  -------  ---------  --------  -------");
-		System.out.println("==============================================");
+		System.out.println("   ┌────────┐  ┌─────────┐ ┌─────────────┐  ┌─────────────┐ ┌────────┐ ┌─────────┐ ");
+		System.out.println("   │ 1.블랙잭 │  │ 2.원 카드 │ │ 3.비밀번호 수정 │  │ 4.로그아웃 하기 │ │ 5.설명서 │ │ 6.현 랭킹 │ ");
+		System.out.println("   └────────┘  └─────────┘ └─────────────┘  └─────────────┘ └────────┘ └─────────┘  ");
+		System.out.println("└───────────────────────────────────────────────────────────────────────────────────┘");
 		System.out.print("메뉴를 선택하세요 >>> ");
 		int menu = -1;
 		try {
@@ -69,14 +76,14 @@ public class GameView {
 		} else if (menu == 5) {
 			while (true) {
 
-				System.out.println("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = ");
-				System.out.println("                          게임 메뉴얼");
-				System.out.println("   ---------  ----------  ---------  ---------  --------");
-				System.out.println("   1.블랙잭(한)  2.블랙적(영)  3.원카드(한)  4.원카드(영)  5.창 닫기");
-				System.out.println("   ---------  ----------  ---------  ---------  --------");
-				System.out.println("                           WARNING");
-				System.out.println("    한국어 버전은 파파고 번역기를 사용하여 번역이 매끄럽지 못할 수도 있습니다.");
-				System.out.println("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = ");
+				System.out.println("\t┌─────────────────────────────────────────────────────────────────────────┐");
+				System.out.println("\t                                  게임 메뉴얼");
+				System.out.println("\t  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌─────────┐  ");
+				System.out.println("\t  │ 1.블랙잭(KOR)│ │ 2.블랙적(ENG)│ │ 3.원카드(KOR)│ │ 4.원카드(ENG)│ │ 5.창 닫기 │  ");
+				System.out.println("\t  └────────────┘ └────────────┘ └────────────┘ └────────────┘ └─────────┘  ");
+				System.out.println("\t                                  WARNING");
+				System.out.println("\t           한국어 버전은 파파고 번역기를 사용하여 번역이 매끄럽지 못할 수도 있습니다.");
+				System.out.println("\t└─────────────────────────────────────────────────────────────────────────┘ ");
 				int version = -1;
 				try {
 					version = Integer.parseInt(scn.next());
@@ -96,6 +103,10 @@ public class GameView {
 					break;
 				}
 			}
+		} else if (menu == 6) {
+			RankServiceImpl.execute(currentUser);
+		} else {
+			System.out.println("메뉴를 다시 선택해주세요.");
 		}
 		return run;
 	}

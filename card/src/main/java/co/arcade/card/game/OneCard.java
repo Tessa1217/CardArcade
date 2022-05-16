@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Stack;
 
 import co.arcade.card.carddeck.Card;
@@ -11,15 +12,18 @@ import co.arcade.card.carddeck.CardDeck;
 
 public class OneCard implements GameRules {
 
-	private Stack<Card> cardStack = CardDeck.shuffleDeck(); // 게임 카드 덱
-	private Stack<Card> discardStack = new Stack<Card>();
-	private Card topCard = discardStack.size() > 0 ? discardStack.peek() : firstOpenCard();
+	private Stack<Card> cardStack; // 게임 카드 덱
+	private Stack<Card> discardStack;
+	private Card topCard;
+	private Scanner scn = new Scanner(System.in);
 
 	// 첫 카드 배분 (원 카드 7장)
 	@Override
 	public Map<String, List<Card>> firstHand() {
 		GameRules.t.run();
 		cardStack = CardDeck.shuffleDeck();
+		discardStack = new Stack<Card>();
+		topCard = firstOpenCard();
 		Map<String, List<Card>> cardMap = new HashMap<String, List<Card>>();
 		List<Card> cards;
 		for (int i = 0; i < 2; i++) {
@@ -41,7 +45,7 @@ public class OneCard implements GameRules {
 		return card;
 	}
 
-	// 탑 카드 출력 ─ │ ┌ ┐ ┘ └
+	// 탑 카드 출력
 	public void openTopCard() {
 		System.out.println("\t\t\t\t\t┌────┐");
 		System.out.println("\t\t\t\t\t│    │");
@@ -62,10 +66,14 @@ public class OneCard implements GameRules {
 	// 게임 카드 덱이 빌 경우 내려놓은 카드 덱을 재셔플
 	public Stack<Card> reshuffle(boolean empty) {
 		if (empty) {
-			System.out.print("카드 덱이 비었습니다. ");
+			System.out.println("\t\t\t카드 덱이 비었습니다. ");
 			GameRules.t.run();
 			cardStack = CardDeck.shuffleDeck(discardStack);
+			discardStack = new Stack<Card>();
 			topCard = firstOpenCard();
+			for (Card card : discardStack) {
+				System.out.println(card.toString());
+			}
 		}
 		return cardStack;
 	}
@@ -76,6 +84,9 @@ public class OneCard implements GameRules {
 
 		Card card = null;
 		if (cardStack.isEmpty() == false) {
+			card = cardStack.pop();
+		} else if (cardStack.isEmpty()) {
+			cardStack = reshuffle(cardStack.isEmpty());
 			card = cardStack.pop();
 		}
 		return card;
@@ -93,17 +104,18 @@ public class OneCard implements GameRules {
 			topCard = discardStack.peek();
 			return discardCard;
 		}
+
 		return null;
 	}
 
 	// 공격 카드
 	public List<Card> attack(int num) {
 		List<Card> attackCard = new ArrayList<Card>();
-		if (cardStack.size() <= 3) {
-			for (int i = 0; i < 3; i++) {
-				discardStack.add(cardStack.pop());
+		if (cardStack.size() < OneCardGame.attack.size()) {
+			for (int i = 0; i < cardStack.size(); i++) {
+				discardStack.push(cardStack.pop());
 			}
-			cardStack = reshuffle(cardStackEmpty());
+			cardStack = reshuffle(cardStack.isEmpty());
 		}
 		if (num == 2) {
 			for (int i = 0; i < 3; i++) {
@@ -136,9 +148,15 @@ public class OneCard implements GameRules {
 			Card card = dealerCard.get(i);
 			if (card.getCardPattern().equals(topCard.getCardPattern())
 					|| card.getCardNo().equals(topCard.getCardNo())) {
+				for (Card card1 : discardStack) {
+					System.out.println(card1.toString());
+				}
 				card = dealerCard.remove(i);
 				System.out.println("딜러가 " + card.toString() + "를 냈습니다.");
 				discardStack.push(card);
+//				for (Card card1 : discardStack) {
+//					System.out.println(card1.toString());
+//				}
 				topCard = discardStack.peek();
 				return card;
 			}
@@ -146,7 +164,7 @@ public class OneCard implements GameRules {
 				card = draw();
 				dealerCard.add(card);
 				System.out.println("딜러가 한 장 먹습니다.");
-				break;
+				return null;
 			}
 		}
 		return null;
