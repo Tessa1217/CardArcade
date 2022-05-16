@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Stack;
 
 import co.arcade.card.carddeck.Card;
@@ -15,7 +14,6 @@ public class OneCard implements GameRules {
 	private Stack<Card> cardStack; // 게임 카드 덱
 	private Stack<Card> discardStack;
 	private Card topCard;
-	private Scanner scn = new Scanner(System.in);
 
 	// 첫 카드 배분 (원 카드 7장)
 	@Override
@@ -71,9 +69,6 @@ public class OneCard implements GameRules {
 			cardStack = CardDeck.shuffleDeck(discardStack);
 			discardStack = new Stack<Card>();
 			topCard = firstOpenCard();
-			for (Card card : discardStack) {
-				System.out.println(card.toString());
-			}
 		}
 		return cardStack;
 	}
@@ -148,15 +143,9 @@ public class OneCard implements GameRules {
 			Card card = dealerCard.get(i);
 			if (card.getCardPattern().equals(topCard.getCardPattern())
 					|| card.getCardNo().equals(topCard.getCardNo())) {
-				for (Card card1 : discardStack) {
-					System.out.println(card1.toString());
-				}
 				card = dealerCard.remove(i);
 				System.out.println("딜러가 " + card.toString() + "를 냈습니다.");
 				discardStack.push(card);
-//				for (Card card1 : discardStack) {
-//					System.out.println(card1.toString());
-//				}
 				topCard = discardStack.peek();
 				return card;
 			}
