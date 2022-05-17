@@ -25,7 +25,7 @@ public class User implements Player {
 			System.out.println("잔액이 부족합니다.");
 			return 0;
 		}
-		System.out.println("플레이어의 베팅 금액: " + money);
+		System.out.println("이번 판 플레이어의 베팅 금액: " + money);
 		user.setMoney(user.getMoney() - money);
 		return money;
 	}

@@ -64,6 +64,7 @@ public class OneCardGame {
 					betMoney = user.bet(user, money);
 
 					if (betMoney != 0) {
+						System.out.println("🔸 베팅 후 플레이어의 잔액은 " + GameView.user.getMoney() + "입니다. 주의해서 배팅해주세요!\n\n");
 						Map<String, List<Card>> cardMap = firstCards();
 						displayCards(cardMap);
 						boolean run = true;
